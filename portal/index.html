@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Portal Operativ - Anticariat Albert Iași</title>
+  <meta name="description" content="Panou de control operativ zilnic pentru împachetare comenzi, curierat și adăugare cărți noi la raft - Anticariat Albert Iași.">
+
+  <!-- Google Fonts: Editorial Serif + Modern UI Sans + Monospace -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,700;1,6..72,500&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/portal.css">
+</head>
+<body>
+
+  <!-- Top Operator Header -->
+  <header class="top-header">
+    <div class="header-container">
+      <div class="brand-wrapper">
+        <div class="brand-logo-badge" title="Anticariat Albert">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            <line x1="9" y1="7" x2="15" y2="7"></line>
+            <line x1="9" y1="11" x2="13" y2="11"></line>
+          </svg>
+        </div>
+        <div class="brand-info">
+          <h1>Anticariat Albert</h1>
+          <div class="shop-subline">
+            <span class="location-pin">📍</span>
+            <span>Strada Alexandru Lăpușneanu 11, Iași</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <div class="operator-badge">
+          <span class="status-dot"></span>
+          <span>Mod Operare: Magazin Fizic</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Quick Metrics Bar -->
+  <section class="metrics-strip">
+    <div class="metrics-container">
+      <div class="metric-pill">
+        <div class="metric-icon-box">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+          </svg>
+        </div>
+        <div class="metric-data">
+          <div class="metric-value" id="metricOrdersToday">3</div>
+          <div class="metric-label">De Împachetat Azi</div>
+        </div>
+      </div>
+
+      <div class="metric-pill">
+        <div class="metric-icon-box">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="1" x2="12" y2="23"></line>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+        </div>
+        <div class="metric-data">
+          <div class="metric-value">259,50 LEI</div>
+          <div class="metric-label">Vânzări Înregistrate Azi</div>
+        </div>
+      </div>
+
+      <div class="metric-pill">
+        <div class="metric-icon-box">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+          </svg>
+        </div>
+        <div class="metric-data">
+          <div class="metric-value">12.488</div>
+          <div class="metric-label">Cărți în Stoc Activ</div>
+        </div>
+      </div>
+
+      <div class="metric-pill">
+        <div class="metric-icon-box">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="8" r="7"></circle>
+            <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+          </svg>
+        </div>
+        <div class="metric-data">
+          <div class="metric-value" id="albertPowerScore">76.500</div>
+          <div class="metric-label">Power Index Puncte</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Navigation View Switcher -->
+  <nav class="nav-section">
+    <div class="nav-tabs">
+      <button class="nav-tab-btn active" data-tab="tabOrders">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="1" y="3" width="15" height="13"></rect>
+          <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+          <circle cx="5.5" cy="18.5" r="2.5"></circle>
+          <circle cx="18.5" cy="18.5" r="2.5"></circle>
+        </svg>
+        <span>Comenzi & Livrare</span>
+        <span class="tab-badge" id="badgeOrdersPending">3</span>
+      </button>
+
+      <button class="nav-tab-btn" data-tab="tabIngestion">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        <span>Adăugare Rapidă</span>
+      </button>
+
+      <button class="nav-tab-btn" data-tab="tabPulse">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+        </svg>
+        <span>Puls Vânzări</span>
+      </button>
+
+      <button class="nav-tab-btn" data-tab="tabRadar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="2" x2="12" y2="12"></line>
+        </svg>
+        <span>Radar Competiție</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Content Container -->
+  <main class="main-content">
+
+    <!-- 1. Orders and Packing Pane -->
+    <section id="tabOrders" class="tab-pane active">
+      <div class="portal-card">
+        <div class="card-header-bar">
+          <div class="card-title-group">
+            <h2>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="2">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+              </svg>
+              Comenzi în Așteptare de Împachetare
+            </h2>
+            <p>Verificați titlul și codul de sticker, culegeți cartea din raftul indicat, bifați căsuța și generați AWB-ul.</p>
+          </div>
+        </div>
+
+        <div id="ordersList" class="orders-container">
+          <!-- Populated dynamically by JavaScript -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Fast Book Ingestion Pane (<30s) -->
+    <section id="tabIngestion" class="tab-pane">
+      <div class="portal-card">
+        <div class="card-header-bar">
+          <div class="card-title-group">
+            <h2>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="2">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+              </svg>
+              Recepție & Adăugare Rapidă Carte (<30 Secunde)
+            </h2>
+            <p>Tastează primele litere din titlu sau autor pentru autocompletare imediată din baza de date.</p>
+          </div>
+
+          <div style="font-size: 0.85rem; color: var(--text-muted);">
+            Cărți adăugate în această sesiune: <strong id="ingestedCounter" style="color: var(--accent-gold); font-size: 1.1rem;">0</strong>
+          </div>
+        </div>
+
+        <!-- Shelf Lock Sticky Banner -->
+        <div class="shelf-lock-banner">
+          <div class="shelf-lock-info">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="3" y1="9" x2="21" y2="9"></line>
+              <line x1="9" y1="21" x2="9" y2="9"></line>
+            </svg>
+            <div>
+              <div style="font-size: 0.8rem; color: #93c5fd; text-transform: uppercase; font-weight: 700;">Raft Activ Blocat</div>
+              <div style="font-size: 0.88rem;">Toate cărțile scanate vor primi automat această coordonată:</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span class="shelf-current-tag" id="shelfLockTag">C1-R04-S2</span>
+            <button class="btn-secondary" id="btnChangeShelf" style="padding: 6px 12px; font-size: 0.82rem;">
+              Schimbă Raftul
+            </button>
+          </div>
+        </div>
+
+        <form id="bookIngestForm" onsubmit="return false;">
+          <div class="ingest-grid">
+            <!-- Left Column: Bibliographic Details -->
+            <div>
+              <div class="form-group" id="titleFormGroup">
+                <label for="inputBookTitle">Titlu Carte (Căutare / Autocompletare)</label>
+                <input 
+                  type="text" 
+                  id="inputBookTitle" 
+                  class="input-box" 
+                  placeholder="Ex: Istoria credintelor sau Morometii..." 
+                  autocomplete="off"
+                />
+                <div id="autocompleteList" class="autocomplete-dropdown"></div>
+              </div>
+
+              <div class="form-group">
+                <label for="inputBookAuthor">Autor / Autori</label>
+                <input type="text" id="inputBookAuthor" class="input-box" placeholder="Ex: Mircea Eliade" />
+              </div>
+
+              <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 12px;">
+                <div class="form-group">
+                  <label for="inputBookPublisher">Editură</label>
+                  <input type="text" id="inputBookPublisher" class="input-box" placeholder="Ex: Minerva" />
+                </div>
+                <div class="form-group">
+                  <label for="inputBookYear">An Apariție</label>
+                  <input type="number" id="inputBookYear" class="input-box" placeholder="Ex: 1978" />
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div class="form-group">
+                  <label for="selectBookBinding">Tip Legătură</label>
+                  <select id="selectBookBinding" class="input-box">
+                    <option value="Cartonata">Cartonată (Copertă tare)</option>
+                    <option value="Brosata" selected>Broșată (Copertă flexibilă)</option>
+                    <option value="Panza">Pânză</option>
+                    <option value="Piele">Piele</option>
+                    <option value="Necunoscut">Necunoscut</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="inputBookPages">Număr Pagini</label>
+                  <input type="number" id="inputBookPages" class="input-box" placeholder="Ex: 340" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Column: Condition, Price, Photo -->
+            <div>
+              <div class="form-group">
+                <label>Stare Fizică Exemplar</label>
+                <div class="chips-selector" id="conditionChips">
+                  <span class="chip-option" data-value="Foarte buna">Foarte bună</span>
+                  <span class="chip-option selected" data-value="Buna">Bună</span>
+                  <span class="chip-option" data-value="Acceptabila">Acceptabilă</span>
+                  <span class="chip-option" data-value="Anticariat / Uzata">Anticariat / Uzată</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Defecte / Mențiuni (Selectați dacă există)</label>
+                <div class="chips-selector" id="flawChips">
+                  <span class="chip-option" data-value="Fără supracopertă">Fără supracopertă</span>
+                  <span class="chip-option" data-value="Sublinieri creion">Sublinieri creion</span>
+                  <span class="chip-option" data-value="Ușoară pată">Ușoară pată</span>
+                  <span class="chip-option" data-value="Cotot uzat">Cotot uzat</span>
+                  <span class="chip-option" data-value="Pagini îngălbenite">Pagini îngălbenite</span>
+                  <span class="chip-option" data-value="Ștampilă fost proprietar">Ștampilă fost proprietar</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="inputBookPrice">Preț de Vânzare (RON)</label>
+                <input 
+                  type="number" 
+                  step="0.5" 
+                  id="inputBookPrice" 
+                  class="input-box" 
+                  placeholder="Ex: 35.00" 
+                  style="font-family: var(--font-mono); font-size: 1.25rem; font-weight: 700; color: var(--accent-gold);"
+                />
+              </div>
+
+              <div class="form-group">
+                <label>Fotografie Copertă (Cameră / Fișier)</label>
+                <div style="display: flex; gap: 12px; align-items: center;">
+                  <label class="btn-secondary" style="cursor: pointer;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                      <circle cx="12" cy="13" r="4"></circle>
+                    </svg>
+                    Fă Poză cu Telefonul
+                    <input type="file" id="photoInput" accept="image/*" capture="environment" style="display: none;" />
+                  </label>
+                  <img id="photoPreview" alt="Previzualizare" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; display: none; border: 1px solid var(--accent-gold);" />
+                </div>
+              </div>
+
+              <div style="margin-top: 24px;">
+                <button type="button" class="btn-primary" id="btnSaveBook" style="width: 100%; justify-content: center; font-size: 1.05rem;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                    <rect x="6" y="14" width="12" height="8"></rect>
+                  </svg>
+                  Salvează & Tipărește Sticker Raft
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- 3. Sales Pulse Pane -->
+    <section id="tabPulse" class="tab-pane">
+      <div class="portal-card">
+        <div class="card-header-bar">
+          <div class="card-title-group">
+            <h2>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="2">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+              </svg>
+              Puls Vânzări & Activitate Reală
+            </h2>
+            <p>Performanță financiară calculată pe baza comenzilor reale din magazin și online.</p>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 24px;">
+          <div style="background: var(--bg-input); padding: 18px; border-radius: var(--radius-md); border: 1px solid var(--border-solid);">
+            <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Încasări Luna Curentă</div>
+            <div style="font-family: var(--font-mono); font-size: 1.8rem; font-weight: 800; color: #f8fafc; margin: 6px 0;">3.140,00 RON</div>
+            <div style="font-size: 0.82rem; color: var(--status-green);">42 comenzi finalizate</div>
+          </div>
+
+          <div style="background: var(--bg-input); padding: 18px; border-radius: var(--radius-md); border: 1px solid var(--border-solid);">
+            <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Valoare Medie Comandă (AOV)</div>
+            <div style="font-family: var(--font-mono); font-size: 1.8rem; font-weight: 800; color: var(--accent-gold); margin: 6px 0;">74,76 RON</div>
+            <div style="font-size: 0.82rem; color: var(--text-dim);">Media tipică: 2-3 cărți / colet</div>
+          </div>
+
+          <div style="background: var(--bg-input); padding: 18px; border-radius: var(--radius-md); border: 1px solid var(--border-solid);">
+            <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Stoc Total Activ</div>
+            <div style="font-family: var(--font-mono); font-size: 1.8rem; font-weight: 800; color: #60a5fa; margin: 6px 0;">12.488 cărți</div>
+            <div style="font-size: 0.82rem; color: var(--text-dim);">Preț mediu stoc: 19,71 RON</div>
+          </div>
+        </div>
+
+        <div style="background: #172033; padding: 18px; border-radius: var(--radius-md); border-left: 4px solid var(--accent-gold);">
+          <h4 style="font-family: var(--font-serif); font-size: 1.1rem; color: var(--accent-gold-light); margin-bottom: 6px;">
+            Notă privind noul magazin Shopify
+          </h4>
+          <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+            Odată finalizată migrarea catalogului pe Shopify cu imagini HD pe fundal alb curat și filtre inteligente de căutare, estimarea de creștere a volumului lunar este de la 20-70 comenzi/lună către 150-250 comenzi/lună, beneficiind de istoricul solid de 15 ani al brandului Anticariat Albert în Iași.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Competitor Radar & Approval Cards Pane -->
+    <section id="tabRadar" class="tab-pane">
+      <div class="portal-card">
+        <!-- Power Index Hero -->
+        <div class="power-index-hero">
+          <div class="gauge-data">
+            <h3>Anticariat Power Index (Clasament Național)</h3>
+            <div class="score-big" id="powerHeroScore">76.500 <span style="font-size: 1.2rem; color: var(--accent-gold);">puncte</span></div>
+            <p style="font-size: 0.88rem; color: var(--accent-gold-light);">
+              Obiectiv Etapa 1 (Lansare Shopify): 150.000 puncte
+            </p>
+            <div class="progress-track">
+              <div class="progress-fill" id="powerProgressFill"></div>
+            </div>
+          </div>
+
+          <div style="max-width: 380px; font-size: 0.85rem; color: var(--text-muted); background: rgba(0,0,0,0.3); padding: 14px; border-radius: 8px;">
+            <strong style="color: var(--text-main);">Cum se calculează punctajul:</strong><br>
+            • 40% Volum catalog (+5 puncte la fiecare carte adăugată la raft)<br>
+            • 40% Trafic web & comenzi online<br>
+            • 15% Indexare Google & cuvinte cheie căutate<br>
+            • 5% Recenzii Google Maps în Iași (Lăpușneanu)
+          </div>
+        </div>
+
+        <!-- Leaderboard Table -->
+        <div class="card-header-bar" style="margin-top: 24px;">
+          <div class="card-title-group">
+            <h2>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="2">
+                <circle cx="12" cy="8" r="7"></circle>
+                <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+              </svg>
+              Topul Anticariatelor din România (16 Domenii Monitorizate)
+            </h2>
+            <p>Comparație directă de performanță extrasă conform datelor de trafic și volum de cărți.</p>
+          </div>
+        </div>
+
+        <div style="overflow-x: auto;">
+          <table class="leaderboard-table">
+            <thead>
+              <tr>
+                <th>Loc</th>
+                <th>Anticariat</th>
+                <th>Volum Catalog</th>
+                <th>Trafic Lunar</th>
+                <th>Punctaj Index</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboardTableBody">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Feature Radar Cards -->
+        <div class="card-header-bar" style="margin-top: 36px;">
+          <div class="card-title-group">
+            <h2>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="2">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              Carduri de Decizie Funcționalități (Radar Competiție)
+            </h2>
+            <p>Funcționalități identificate la concurenți. Apăsați [Vreau pe Shopify: DA] dacă doriți să le activăm pentru magazin.</p>
+          </div>
+        </div>
+
+        <div class="radar-grid" id="featureRadarGrid">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Interactive Modal Dialogue -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div id="modalTitle"></div>
+        <button class="modal-close-btn" id="modalCloseBtn">&times;</button>
+      </div>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Application Bootstrap -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
