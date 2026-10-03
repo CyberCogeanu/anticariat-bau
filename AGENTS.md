@@ -9,5 +9,6 @@
 3. **Customer PII Security**:
    - Customer personal data must be processed in compliance with GDPR.
    - No customer phone numbers or physical addresses may be committed to Git or passed to unvetted cloud models.
-4. **Secrets Management**:
-   - All production Shopify tokens, courier credentials, and email API keys must be retrieved from Doppler config `anticariat-bau`.
+4. **Secrets Management (Zero Credential Files on Disk)**:
+   - Never create or store credentials in `.env`, `.env.*`, or any filesystem files on disk.
+   - All production Shopify tokens, courier credentials, Cloudflare tokens, and email API keys must be retrieved strictly from Doppler (configs: `homelab-lab/prd` or dedicated `anticariat-bau`).
