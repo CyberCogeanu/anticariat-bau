@@ -15,7 +15,7 @@ import {
   COMPETITOR_LEADERBOARD,
   FEATURE_RADAR_CARDS,
   SALES_PULSE_SUMMARY
-} from './mock_data.js';
+} from './mock_data.js?v=20261003_v4';
 
 class OperatorPortalApp {
   constructor() {
@@ -668,8 +668,11 @@ class OperatorPortalApp {
             <span class="rank-badge ${rankBadgeClass}">${idx + 1}</span>
           </td>
           <td>
-            <strong>${item.name}</strong>
-            <div style="font-size: 0.78rem; color: var(--text-dim);">${item.domain} • ${item.headquarters}</div>
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <strong style="${isAlbert ? 'color: var(--accent-gold); font-size: 1.02rem;' : ''}">${item.name}</strong>
+              ${item.badge ? `<span style="font-size: 0.72rem; padding: 2px 7px; border-radius: 10px; background: ${isAlbert ? 'rgba(212, 163, 115, 0.25)' : 'rgba(255,255,255,0.06)'}; color: ${isAlbert ? 'var(--accent-gold-light)' : 'var(--text-dim)'}; border: 1px solid ${isAlbert ? 'var(--accent-gold)' : 'var(--border-subtle)'};">${item.badge}</span>` : ''}
+            </div>
+            <div style="font-size: 0.78rem; color: var(--text-dim); margin-top: 2px;">${item.domain} • ${item.headquarters}</div>
           </td>
           <td>${item.catalog_volume}</td>
           <td>${item.monthly_traffic}</td>

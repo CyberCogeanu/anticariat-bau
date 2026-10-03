@@ -467,6 +467,45 @@ export const COMPETITOR_LEADERBOARD = [
     badge_type: "standard",
     platform: "Custom",
     headquarters: "Iași"
+  },
+  {
+    rank: 23,
+    domain: "anticariat-academic.ro",
+    name: "Anticariat Academic",
+    score: 30000,
+    score_display: "30.000",
+    catalog_volume: "3.200 titluri",
+    monthly_traffic: "~3.500 vizite",
+    badge: "Carte Universitară",
+    badge_type: "standard",
+    platform: "PrestaShop",
+    headquarters: "București"
+  },
+  {
+    rank: 24,
+    domain: "anticariat-plus.ro",
+    name: "Anticariat Plus",
+    score: 25000,
+    score_display: "25.000",
+    catalog_volume: "2.800 titluri",
+    monthly_traffic: "~3.000 vizite",
+    badge: "Prahova & Online",
+    badge_type: "standard",
+    platform: "WooCommerce",
+    headquarters: "Ploiești"
+  },
+  {
+    rank: 25,
+    domain: "libraria-anticariat.ro",
+    name: "Librăria Anticariat",
+    score: 20000,
+    score_display: "20.000",
+    catalog_volume: "2.500 titluri",
+    monthly_traffic: "~2.500 vizite",
+    badge: "Banat Tradițional",
+    badge_type: "standard",
+    platform: "Custom",
+    headquarters: "Timișoara"
   }
 ];
 
