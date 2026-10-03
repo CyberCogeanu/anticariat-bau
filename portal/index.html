@@ -106,7 +106,15 @@
   <!-- Navigation View Switcher -->
   <nav class="nav-section">
     <div class="nav-tabs">
-      <button class="nav-tab-btn active" data-tab="tabOrders">
+      <button class="nav-tab-btn active" data-tab="tabRadar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="2" x2="12" y2="12"></line>
+        </svg>
+        <span>Radar Competiție</span>
+      </button>
+
+      <button class="nav-tab-btn" data-tab="tabOrders">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <rect x="1" y="3" width="15" height="13"></rect>
           <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
@@ -131,22 +139,89 @@
         </svg>
         <span>Puls Vânzări</span>
       </button>
-
-      <button class="nav-tab-btn" data-tab="tabRadar">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10"></circle>
-          <line x1="12" y1="2" x2="12" y2="12"></line>
-        </svg>
-        <span>Radar Competiție</span>
-      </button>
     </div>
   </nav>
 
   <!-- Main Content Container -->
   <main class="main-content">
 
-    <!-- 1. Orders and Packing Pane -->
-    <section id="tabOrders" class="tab-pane active">
+    <!-- 1. Competitor Radar & Approval Cards Pane (Default Landing View) -->
+    <section id="tabRadar" class="tab-pane active">
+      <div class="portal-card">
+        <!-- Power Index Hero -->
+        <div class="power-index-hero">
+          <div class="gauge-data">
+            <h3>Anticariat Power Index (Clasament Național)</h3>
+            <div class="score-big" id="powerHeroScore">76.500 <span style="font-size: 1.2rem; color: var(--accent-gold);">puncte</span></div>
+            <p style="font-size: 0.88rem; color: var(--accent-gold-light);">
+              Obiectiv Etapa 1 (Lansare Shopify): 150.000 puncte
+            </p>
+            <div class="progress-track">
+              <div class="progress-fill" id="powerProgressFill"></div>
+            </div>
+          </div>
+
+          <div style="max-width: 380px; font-size: 0.85rem; color: var(--text-muted); background: rgba(0,0,0,0.3); padding: 14px; border-radius: 8px;">
+            <strong style="color: var(--text-main);">Cum se calculează punctajul:</strong><br>
+            • 40% Volum catalog (+5 puncte la fiecare carte adăugată la raft)<br>
+            • 40% Trafic web & comenzi online<br>
+            • 15% Indexare Google & cuvinte cheie căutate<br>
+            • 5% Recenzii Google Maps în Iași (Lăpușneanu)
+          </div>
+        </div>
+
+        <!-- Leaderboard Table -->
+        <div class="card-header-bar" style="margin-top: 24px;">
+          <div class="card-title-group">
+            <h2>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="2">
+                <circle cx="12" cy="8" r="7"></circle>
+                <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+              </svg>
+              Topul Anticariatelor din România (22 Domenii Monitorizate)
+            </h2>
+            <p>Comparație directă de performanță extrasă conform datelor de trafic și volum de cărți.</p>
+          </div>
+        </div>
+
+        <div style="overflow-x: auto;">
+          <table class="leaderboard-table">
+            <thead>
+              <tr>
+                <th>Loc</th>
+                <th>Anticariat</th>
+                <th>Volum Catalog</th>
+                <th>Trafic Lunar</th>
+                <th>Punctaj Index</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboardTableBody">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Feature Radar Cards -->
+        <div class="card-header-bar" style="margin-top: 36px;">
+          <div class="card-title-group">
+            <h2>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="2">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              Carduri de Decizie Funcționalități (Radar Competiție)
+            </h2>
+            <p>Funcționalități identificate la concurenți. Apăsați [Vreau pe Shopify: DA] dacă doriți să le activăm pentru magazin.</p>
+          </div>
+        </div>
+
+        <div class="radar-grid" id="featureRadarGrid">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Orders and Packing Pane -->
+    <section id="tabOrders" class="tab-pane">
       <div class="portal-card">
         <div class="card-header-bar">
           <div class="card-title-group">
@@ -366,81 +441,6 @@
           <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
             Odată finalizată migrarea catalogului pe Shopify cu imagini HD pe fundal alb curat și filtre inteligente de căutare, estimarea de creștere a volumului lunar este de la 20-70 comenzi/lună către 150-250 comenzi/lună, beneficiind de istoricul solid de 15 ani al brandului Anticariat Albert în Iași.
           </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 4. Competitor Radar & Approval Cards Pane -->
-    <section id="tabRadar" class="tab-pane">
-      <div class="portal-card">
-        <!-- Power Index Hero -->
-        <div class="power-index-hero">
-          <div class="gauge-data">
-            <h3>Anticariat Power Index (Clasament Național)</h3>
-            <div class="score-big" id="powerHeroScore">76.500 <span style="font-size: 1.2rem; color: var(--accent-gold);">puncte</span></div>
-            <p style="font-size: 0.88rem; color: var(--accent-gold-light);">
-              Obiectiv Etapa 1 (Lansare Shopify): 150.000 puncte
-            </p>
-            <div class="progress-track">
-              <div class="progress-fill" id="powerProgressFill"></div>
-            </div>
-          </div>
-
-          <div style="max-width: 380px; font-size: 0.85rem; color: var(--text-muted); background: rgba(0,0,0,0.3); padding: 14px; border-radius: 8px;">
-            <strong style="color: var(--text-main);">Cum se calculează punctajul:</strong><br>
-            • 40% Volum catalog (+5 puncte la fiecare carte adăugată la raft)<br>
-            • 40% Trafic web & comenzi online<br>
-            • 15% Indexare Google & cuvinte cheie căutate<br>
-            • 5% Recenzii Google Maps în Iași (Lăpușneanu)
-          </div>
-        </div>
-
-        <!-- Leaderboard Table -->
-        <div class="card-header-bar" style="margin-top: 24px;">
-          <div class="card-title-group">
-            <h2>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="2">
-                <circle cx="12" cy="8" r="7"></circle>
-                <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
-              </svg>
-              Topul Anticariatelor din România (16 Domenii Monitorizate)
-            </h2>
-            <p>Comparație directă de performanță extrasă conform datelor de trafic și volum de cărți.</p>
-          </div>
-        </div>
-
-        <div style="overflow-x: auto;">
-          <table class="leaderboard-table">
-            <thead>
-              <tr>
-                <th>Loc</th>
-                <th>Anticariat</th>
-                <th>Volum Catalog</th>
-                <th>Trafic Lunar</th>
-                <th>Punctaj Index</th>
-              </tr>
-            </thead>
-            <tbody id="leaderboardTableBody">
-              <!-- Rendered dynamically -->
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Feature Radar Cards -->
-        <div class="card-header-bar" style="margin-top: 36px;">
-          <div class="card-title-group">
-            <h2>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="2">
-                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-              </svg>
-              Carduri de Decizie Funcționalități (Radar Competiție)
-            </h2>
-            <p>Funcționalități identificate la concurenți. Apăsați [Vreau pe Shopify: DA] dacă doriți să le activăm pentru magazin.</p>
-          </div>
-        </div>
-
-        <div class="radar-grid" id="featureRadarGrid">
-          <!-- Rendered dynamically -->
         </div>
       </div>
     </section>

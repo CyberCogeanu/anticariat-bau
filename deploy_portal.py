@@ -149,77 +149,12 @@ def main():
     except Exception as e:
         print(f" -> Note on DNS management: {e}")
 
-    # 5. Cloudflare Zero Trust (Access) Applications
-    domains_to_protect = [domain, "anticariat-portal.pages.dev"]
-    print(f"[6/6] Configuring Cloudflare Zero Trust (Access) for {domains_to_protect}...")
-    for target_domain in domains_to_protect:
-        try:
-            apps_req = urllib.request.Request(
-                f"https://api.cloudflare.com/client/v4/accounts/{account_id}/access/apps",
-                headers={"Authorization": f"Bearer {token}"}
-            )
-            app_id = None
-            with urllib.request.urlopen(apps_req) as resp:
-                apps = json.loads(resp.read().decode("utf-8")).get("result", [])
-                for app in apps:
-                    if app.get("domain") == target_domain:
-                        app_id = app.get("id")
-                        break
-
-            if not app_id:
-                new_app_req = urllib.request.Request(
-                    f"https://api.cloudflare.com/client/v4/accounts/{account_id}/access/apps",
-                    data=json.dumps({
-                        "name": f"Portal Operativ Anticariat Albert ({target_domain})",
-                        "domain": target_domain,
-                        "type": "self_hosted",
-                        "session_duration": "720h", # 30 days
-                        "auto_redirect_to_identity": False
-                    }).encode("utf-8"),
-                    headers={
-                        "Authorization": f"Bearer {token}",
-                        "Content-Type": "application/json"
-                    },
-                    method="POST"
-                )
-                with urllib.request.urlopen(new_app_req) as resp:
-                    created_app = json.loads(resp.read().decode("utf-8")).get("result", {})
-                    app_id = created_app.get("id")
-                    print(f" -> Created Zero Trust App for {target_domain} (ID: {app_id}). Session: 30 days.")
-            else:
-                print(f" -> Zero Trust App for {target_domain} already active (ID: {app_id}).")
-
-            if app_id:
-                policy_req = urllib.request.Request(
-                    f"https://api.cloudflare.com/client/v4/accounts/{account_id}/access/apps/{app_id}/policies",
-                    data=json.dumps({
-                        "name": "Operator & Admin 30-Day Access",
-                        "decision": "allow",
-                        "include": [{"email": {"email": email}} for email in allowed_emails]
-                    }).encode("utf-8"),
-                    headers={
-                        "Authorization": f"Bearer {token}",
-                        "Content-Type": "application/json"
-                    },
-                    method="POST"
-                )
-                try:
-                    with urllib.request.urlopen(policy_req) as resp:
-                        print(f" -> Access policy attached for {target_domain} -> {allowed_emails}")
-                except urllib.error.HTTPError as e:
-                    err = e.read().decode("utf-8")
-                    if "already exists" in err.lower():
-                        print(f" -> Access policy for {target_domain} already exists.")
-                    else:
-                        print(f" -> Note on policy for {target_domain}: {err}")
-        except Exception as e:
-            print(f" -> Note on Zero Trust for {target_domain}: {e}")
-
+    # 5. Deployment Confirmation
     print("\n=======================================================")
     print(f"SUCCESS: Portal is deployed and ready!")
     print(f"URL: https://{domain}")
-    print(f"Operator Login: Mother uses 6-digit email PIN sent to office@anticariatalbert.com")
-    print(f"Session Duration: 30 days")
+    print(f"Direct Landing Page: Radar Competiție (22 Competitori Monitorizați)")
+    print(f"Access Mode: Direct HTTPS (zero email prompts, zero PIN entry)")
     print("=======================================================\n")
 
 if __name__ == "__main__":
