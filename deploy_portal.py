@@ -15,7 +15,7 @@ import urllib.error
 
 PORTAL_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "portal")
 DOPPLER_BIN = "/home/marius/.local/bin/doppler"
-PROJECT = "homelab-lab"
+PROJECT = "anticariat-bau"
 CONFIG = "prd"
 
 def get_doppler_secret(name: str) -> str:
