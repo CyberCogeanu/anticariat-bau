@@ -349,6 +349,8 @@ def main() -> None:
     )
     parser.add_argument(
         "--html-path",
+        "--file",
+        dest="html_path",
         type=str,
         default="anticariat_termeni_si_conditii.html",
         help="Path to the legal HTML source file.",

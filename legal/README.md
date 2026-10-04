@@ -33,39 +33,38 @@ Textul acopera integral cerintele obligatorii din:
 
 ---
 
-## 3. Placeholders Companie
+## 3. Date de Identificare ale Operatorului
 
-Pentru personalizarea finala, operatorul poate ajusta urmatoarele variabile marcate in document:
-- `[DENUMIRE_FIRMA_SRL]`
-- `[CUI_FIRMA]`
-- `[NUMAR_REGISTRU_COMERT]`
-- `[SEDIU_SOCIAL]`
-- `[ADRESA_MAGAZIN_FIZIC]` (implicit: Strada Alexandru Lapusneanu nr. 11, cod postal 700259, Iasi)
-- `[EMAIL_CONTACT]`
-- `[TELEFON_CONTACT]`
-- `[PROGRAM_MAGAZIN]`
+Documentul include datele autentice de identificare ale operatorului comercial:
+- **Denumire operator:** Albert M. Maria PFA
+- **Cod Unic de Inregistrare (CUI):** 40913605
+- **Nr. Registrul Comertului (ORC):** F22/443/04.04.2019
+- **Sediu social / Corespondenta:** OP 1, CP 58, Iasi, Cod postal 700750
+- **Cont bancar (IBAN):** RO44INGB000099909043235 (ING Bank Romania)
+- **Punct de lucru (Magazin fizic):** Strada Alexandru Lapusneanu nr. 11, cod postal 700259, Iasi, Romania
+- **E-mail de contact:** contact@anticariatalbert.com
+- **Telefon de asistenta:** +40 760 806 656
+- **Program magazin fizic:** Luni - Vineri: 09:00 - 17:00, Sambata: 10:00 - 15:00, Duminica: Inchis
 
 ---
 
-## 4. Instructiuni de Rulare
+## 4. Instructiuni de Rulare si Publicare
 
 ### Regula de Securitate
-Zero credentiale pe disc. Toti parametrii de autentificare sunt injectati exclusiv prin Doppler.
+Zero credentiale pe disc. Toti parametrii de autentificare Shopify sunt injectati exclusiv prin Doppler (`--project anticariat-bau --config prd`).
 
 ### Verificare in mod Dry-Run:
 ```bash
-doppler run --project anticariat-bau --config prd -- python3 deploy_legal_page.py --dry-run
+doppler run --project anticariat-bau --config prd -- python3 bau/legal/deploy_legal_page.py --file bau/legal/anticariat_termeni_si_conditii.html --dry-run
 ```
 
 ### Publicare Efectiva in Shopify:
 ```bash
-doppler run --project anticariat-bau --config prd -- python3 deploy_legal_page.py
+doppler run --project anticariat-bau --config prd -- python3 bau/legal/deploy_legal_page.py --file bau/legal/anticariat_termeni_si_conditii.html
 ```
 
 ### Nota Privind Permisiunile Shopify:
-Pentru crearea de pagini de continut, Custom App-ul din Shopify Admin necesita permisiunile:
+Pentru crearea si actualizarea de pagini de continut, Custom App-ul din Shopify Admin utilizeaza permisiunile:
 - `read_content`
 - `write_content`
 
-Daca aceste permisiuni nu sunt inca bifate, activati-le din:
-*Shopify Admin -> Settings -> Apps and sales channels -> Develop apps -> [Nume App] -> Configuration -> Admin API access scopes -> Online Store -> bifati read_content & write_content -> Save.*
