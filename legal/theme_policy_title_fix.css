@@ -1,0 +1,19 @@
+
+/* anticariat-legal: policy title mobile fix (2026-10-04)
+   The Horizon /policies/* H1 ("Politica de confidentialitate") is wider than a
+   390px viewport and stretches .shopify-policy__container, causing horizontal
+   overflow. Appended to assets/base.css by bau/legal/apply_theme_policy_fix.py. */
+@media screen and (max-width: 749px) {
+  .shopify-policy__title h1 {
+    font-size: 2.25rem;
+    line-height: 1.15;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+  .shopify-policy__container,
+  .shopify-policy__container > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+}
+/* end anticariat-legal: policy title mobile fix */

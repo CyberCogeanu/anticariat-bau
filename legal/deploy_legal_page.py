@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 """
-Deploy Legal 'Termeni si Conditii' Page and Native Policy to Shopify via Admin GraphQL API.
+Deploy Legal Pages and Native Policies to Shopify via Admin GraphQL API.
 
 Deterministically creates or updates both:
-1. Online Store Page: /pages/termeni-si-conditii (Page ID: gid://shopify/Page/762875904391)
-2. Native Shop Policy: /policies/terms-of-service (TERMS_OF_SERVICE)
+1. Online Store Pages (/pages/*):
+   - Termeni si Conditii: /pages/termeni-si-conditii (Page ID: gid://shopify/Page/762875904391)
+   - Politica de Confidentialitate: /pages/politica-de-confidentialitate
+2. Native Shop Policies (/policies/*):
+   - TERMS_OF_SERVICE: /policies/terms-of-service
+   - PRIVACY_POLICY: /policies/privacy-policy
 
 Zero credential files on disk: strictly consumes environment variables
 injected via Doppler or runtime environment.
@@ -335,6 +339,29 @@ def create_or_update_page(
         return create_data.get("page", {})
 
 
+def disable_privacy_features(
+    shop_domain: str,
+    token: str,
+    features: List[str],
+    api_version: str,
+) -> List[str]:
+    """Disable automatic management for customer privacy features (e.g. PRIVACY_POLICY)."""
+    mutation = """
+    mutation DisablePrivacyFeatures($featuresToDisable: [PrivacyFeaturesEnum!]!) {
+      privacyFeaturesDisable(featuresToDisable: $featuresToDisable) {
+        featuresDisabled
+        userErrors {
+          field
+          message
+        }
+      }
+    }
+    """
+    res = execute_graphql(shop_domain, token, mutation, {"featuresToDisable": features}, api_version)
+    data = res.get("data", {}).get("privacyFeaturesDisable", {})
+    return data.get("featuresDisabled", [])
+
+
 def update_shop_policy(
     shop_domain: str,
     token: str,
@@ -344,7 +371,8 @@ def update_shop_policy(
     dry_run: bool = False,
 ) -> Dict[str, Any]:
     """
-    Update native Shopify Shop Policy (e.g. TERMS_OF_SERVICE) via GraphQL mutation.
+    Update native Shopify Shop Policy (e.g. TERMS_OF_SERVICE, PRIVACY_POLICY) via GraphQL mutation.
+    Automatically handles disabling auto-managed privacy features when updating PRIVACY_POLICY.
     """
     print(f"[POLICY] Target native policy type: {policy_type}")
     if dry_run:
@@ -380,7 +408,21 @@ def update_shop_policy(
     data = res.get("data", {}).get("shopPolicyUpdate", {})
     user_errors = data.get("userErrors", [])
     if user_errors:
-        raise RuntimeError(f"Shopify shopPolicyUpdate user errors: {user_errors}")
+        # Check if error is due to automatic management of Privacy Policy
+        is_auto_managed = any(
+            "Automatic management for Privacy Policy must be turned off" in err.get("message", "")
+            for err in user_errors
+        )
+        if is_auto_managed:
+            print("[POLICY] Automatic management for Privacy Policy detected. Disabling automatic management...")
+            disabled = disable_privacy_features(shop_domain, token, ["PRIVACY_POLICY"], api_version)
+            print(f"[POLICY] Disabled automatic management: {disabled}. Retrying shopPolicyUpdate...")
+            res = execute_graphql(shop_domain, token, mutation, variables, api_version)
+            data = res.get("data", {}).get("shopPolicyUpdate", {})
+            user_errors = data.get("userErrors", [])
+
+        if user_errors:
+            raise RuntimeError(f"Shopify shopPolicyUpdate user errors: {user_errors}")
 
     return data.get("shopPolicy", {})
 
@@ -395,16 +437,52 @@ def verify_no_em_dash(text: str) -> None:
         )
 
 
+DOC_PRESETS = {
+    "terms": {
+        "html_file": "anticariat_termeni_si_conditii.html",
+        "handle": "termeni-si-conditii",
+        "title": "Termeni și condiții",
+        "policy_type": "TERMS_OF_SERVICE",
+        "page_id": "gid://shopify/Page/762875904391",
+        "label": "Termeni și Condiții",
+    },
+    "privacy": {
+        "html_file": "anticariat_politica_de_confidentialitate.html",
+        "handle": "politica-de-confidentialitate",
+        "title": "Politica de confidențialitate",
+        "policy_type": "PRIVACY_POLICY",
+        "page_id": None,
+        "label": "Politica de Confidențialitate (GDPR)",
+    },
+}
+
+POLICY_SLUGS = {
+    "TERMS_OF_SERVICE": "terms-of-service",
+    "PRIVACY_POLICY": "privacy-policy",
+    "REFUND_POLICY": "refund-policy",
+    "SHIPPING_POLICY": "shipping-policy",
+    "LEGAL_NOTICE": "legal-notice",
+}
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Deploy Legal 'Termeni si Conditii' page and policy to Shopify via Admin GraphQL API."
+        description="Deploy Legal pages and native policies to Shopify via Admin GraphQL API."
+    )
+    parser.add_argument(
+        "--type",
+        "--doc-type",
+        dest="doc_type",
+        choices=["terms", "privacy"],
+        default=None,
+        help="Legal document type preset: 'terms' (Termeni si Conditii) or 'privacy' (Politica de Confidentialitate). Auto-detected if omitted.",
     )
     parser.add_argument(
         "--html-path",
         "--file",
         dest="html_path",
         type=str,
-        default="anticariat_termeni_si_conditii.html",
+        default=None,
         help="Path to the legal HTML source file.",
     )
     parser.add_argument(
@@ -417,26 +495,26 @@ def main() -> None:
     parser.add_argument(
         "--handle",
         type=str,
-        default="termeni-si-conditii",
-        help="Shopify page handle (slug). Default: termeni-si-conditii",
+        default=None,
+        help="Shopify page handle (slug).",
     )
     parser.add_argument(
         "--page-id",
         type=str,
-        default="gid://shopify/Page/762875904391",
-        help="Optional explicit Shopify Page ID. Default: gid://shopify/Page/762875904391",
+        default=None,
+        help="Optional explicit Shopify Page ID.",
     )
     parser.add_argument(
         "--title",
         type=str,
-        default="Termeni și condiții",
-        help="Shopify page title. Default: Termeni și condiții",
+        default=None,
+        help="Shopify page title.",
     )
     parser.add_argument(
         "--policy-type",
         type=str,
-        default="TERMS_OF_SERVICE",
-        help="Shopify ShopPolicyType (e.g. TERMS_OF_SERVICE). Default: TERMS_OF_SERVICE",
+        default=None,
+        help="Shopify ShopPolicyType (e.g. TERMS_OF_SERVICE, PRIVACY_POLICY).",
     )
     parser.add_argument(
         "--raw",
@@ -451,12 +529,44 @@ def main() -> None:
 
     args = parser.parse_args()
 
+    # Determine document type preset if not explicit
+    preset_key = args.doc_type
+    if not preset_key:
+        file_hint = (args.html_path or "").lower()
+        policy_hint = (args.policy_type or "").upper()
+        handle_hint = (args.handle or "").lower()
+
+        if (
+            "confidentialitate" in file_hint
+            or "privacy" in file_hint
+            or policy_hint == "PRIVACY_POLICY"
+            or "confidentialitate" in handle_hint
+        ):
+            preset_key = "privacy"
+        elif (
+            "termeni" in file_hint
+            or "terms" in file_hint
+            or policy_hint == "TERMS_OF_SERVICE"
+            or "termeni" in handle_hint
+        ):
+            preset_key = "terms"
+        else:
+            preset_key = "terms"
+
+    preset = DOC_PRESETS[preset_key]
+    html_target = args.html_path or preset["html_file"]
+    handle = args.handle or preset["handle"]
+    title = args.title or preset["title"]
+    policy_type = args.policy_type or preset["policy_type"]
+    page_id = args.page_id or preset["page_id"]
+    doc_label = preset["label"]
+
     # Find HTML file
     candidate_paths = [
-        Path(args.html_path),
-        Path(__file__).parent / args.html_path,
-        Path("/home/marius/Projects/anticariat/bau") / args.html_path,
-        Path("/home/marius/Projects/anticariat/bau/legal") / args.html_path,
+        Path(html_target),
+        Path(__file__).parent / html_target,
+        Path("/home/marius/Projects/anticariat/bau") / html_target,
+        Path("/home/marius/Projects/anticariat/bau/legal") / html_target,
     ]
     html_file = None
     for p in candidate_paths:
@@ -465,16 +575,17 @@ def main() -> None:
             break
 
     if not html_file:
-        print(f"[ERROR] Could not find HTML file at '{args.html_path}' or fallback locations.", file=sys.stderr)
+        print(f"[ERROR] Could not find HTML file at '{html_target}' or fallback locations.", file=sys.stderr)
         sys.exit(1)
 
-    print(f"[INPUT] Reading legal terms from: {html_file}")
+    print(f"[INPUT] Document preset: {preset_key.upper()} ({doc_label})")
+    print(f"[INPUT] Reading source from: {html_file}")
     with open(html_file, "r", encoding="utf-8") as f:
         raw_html = f.read()
 
     # Strict compliance check
     verify_no_em_dash(raw_html)
-    print("[COMPLIANCE] Zero Unicode em dash (U+2014) characters verified.")
+    print("[COMPLIANCE] Zero Unicode em dash (U+2014) characters verified in source HTML.")
 
     # Extract clean body HTML without head/style/title blocks
     body_html = extract_body_content(raw_html, raw_mode=args.raw)
@@ -484,42 +595,49 @@ def main() -> None:
     # Connect to Shopify
     api_version = os.environ.get("SHOPIFY_API_VERSION", "2025-01")
     shop_domain, token = get_shopify_credentials()
-    print(f"[CONNECT] Connected to store: {shop_domain} (API: {api_version})")
+    public_domain = os.environ.get("PUBLIC_STORE_DOMAIN", "dev.anticariatalbert.com")
+    print(f"[CONNECT] Connected to shop: {shop_domain} (API: {api_version})")
 
     # Deploy based on target
     if args.target in ("all", "page"):
-        print(f"[DEPLOY] Updating Online Store Page '{args.handle}'...")
+        print(f"[DEPLOY] Updating Online Store Page '{handle}' (Title: '{title}')...")
         page_res = create_or_update_page(
             shop_domain=shop_domain,
             token=token,
-            title=args.title,
-            handle=args.handle,
+            title=title,
+            handle=handle,
             body_html=body_html,
             api_version=api_version,
-            page_id=args.page_id,
+            page_id=page_id,
             dry_run=args.dry_run,
         )
-        page_id = page_res.get("id") or args.page_id
-        page_url = f"https://{shop_domain}/pages/{args.handle}"
-        print(f"[SUCCESS] Page endpoint synced -> ID: {page_id} | URL: {page_url}")
+        final_page_id = page_res.get("id") or page_id
+        page_admin_url = f"https://{shop_domain}/pages/{handle}"
+        print(f"[SUCCESS] Page endpoint synced -> ID: {final_page_id} | Store URL: {page_admin_url}")
+        if public_domain and public_domain != shop_domain:
+            print(f"          Public storefront URL: https://{public_domain}/pages/{handle}")
 
     if args.target in ("all", "policy"):
-        print(f"[DEPLOY] Updating Shop Policy '{args.policy_type}'...")
+        policy_slug = POLICY_SLUGS.get(policy_type, policy_type.lower().replace("_", "-"))
+        print(f"[DEPLOY] Updating Shop Policy '{policy_type}' (Slug: '{policy_slug}')...")
         policy_res = update_shop_policy(
             shop_domain=shop_domain,
             token=token,
-            policy_type=args.policy_type,
+            policy_type=policy_type,
             body_html=body_html,
             api_version=api_version,
             dry_run=args.dry_run,
         )
-        policy_url = f"https://{shop_domain}/policies/terms-of-service"
-        print(f"[SUCCESS] Policy endpoint synced -> Type: {args.policy_type} | URL: {policy_url}")
+        policy_admin_url = f"https://{shop_domain}/policies/{policy_slug}"
+        print(f"[SUCCESS] Policy endpoint synced -> Type: {policy_type} | Store URL: {policy_admin_url}")
+        if public_domain and public_domain != shop_domain:
+            print(f"          Public storefront URL: https://{public_domain}/policies/{policy_slug}")
 
     print("=" * 70)
-    print("[COMPLETED] Legal Terms synchronization successfully finished.")
+    print(f"[COMPLETED] {doc_label} synchronization successfully finished.")
     print("=" * 70)
 
 
 if __name__ == "__main__":
     main()
+

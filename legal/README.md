@@ -1,13 +1,19 @@
 # Cadrul Legal si Proceduri de Publicare - Anticariat Albert
 
-Acest modul contine documentatia juridica si scriptul de sincronizare determinista a documentului **Termeni si Conditii** pentru magazinul online **Anticariat Albert** (Shopify).
+Acest modul contine documentatia juridica si scriptul de sincronizare determinista a documentelor **Termeni si Conditii** si **Politica de Confidentialitate (GDPR)** pentru magazinul online **Anticariat Albert** (Shopify).
 
 ---
 
 ## 1. Structura Fisiere
 
 - `anticariat_termeni_si_conditii.html`: Documentul HTML semantic complet redactat in limba romana, conform legislatiei nationale si europene aplicabile comertului electronic si anticariatelor. Include stilizare universala inline (fara blocuri izolate `<style>` sau etichete `<head>`) pentru compatibilitate perfecta pe ambele endpoint-uri Shopify.
-- `deploy_legal_page.py`: Script Python determinist pentru sincronizarea paginii Shopify prin Admin GraphQL API atat ca Online Store Page (`/pages/termeni-si-conditii`), cat si ca Native Shop Policy (`/policies/terms-of-service`).
+- `anticariat_politica_de_confidentialitate.html`: Politica de Confidentialitate GDPR (12 sectiuni), cu acelasi sistem vizual (carduri sumar, badge-uri numerotate, callout fiscal 10 ani, tabel sinteza prelucrari, card CTA ANSPDCP).
+- `deploy_legal_page.py`: Script Python determinist pentru sincronizarea ambelor documente prin Admin GraphQL API atat ca Online Store Page (`/pages/*`), cat si ca Native Shop Policy (`/policies/*`). Preset selectat cu `--type terms|privacy` sau detectat automat din numele fisierului.
+
+| Document | Page handle | Page ID | Shop Policy |
+|---|---|---|---|
+| Termeni si Conditii | `termeni-si-conditii` | `gid://shopify/Page/762875904391` | `TERMS_OF_SERVICE` -> `/policies/terms-of-service` |
+| Politica de Confidentialitate | `politica-de-confidentialitate` | `gid://shopify/Page/762881114503` | `PRIVACY_POLICY` -> `/policies/privacy-policy` |
 
 ---
 
@@ -90,3 +96,28 @@ doppler run --project anticariat-bau --config prd -- python3 bau/legal/deploy_le
 # Sincronizare exclusiva pentru Politica Nativa Shopify (/policies/terms-of-service)
 doppler run --project anticariat-bau --config prd -- python3 bau/legal/deploy_legal_page.py --file bau/legal/anticariat_termeni_si_conditii.html --target policy
 ```
+
+### Politica de Confidentialitate (Page + Shop Policy):
+```bash
+doppler run --project anticariat-bau --config prd -- python3 bau/legal/deploy_legal_page.py --type privacy --dry-run
+doppler run --project anticariat-bau --config prd -- python3 bau/legal/deploy_legal_page.py --type privacy
+```
+
+---
+
+## 6. Politica de Confidentialitate: Audit si Particularitati
+
+### Benchmark (Octombrie 2026)
+- **Textul anterior** de pe `/policies/privacy-policy` era sablonul generic generat automat de Shopify (fara operator identificat, fara temeiuri GDPR Art. 6, fara termene de pastrare, fara ANSPDCP).
+- **Printre Carti** (`printrecarti.ro/politica-de-confidentialitate`): structura I-VII buna (operator, categorii, scopuri + temeiuri, durata, dezvaluire, transfer, drepturi), dar nu mentioneaza ANSPDCP cu date de contact, nu are tabel sinteza si nu acopera minorii sau securitatea.
+- **Documentul nostru** preia structura lor si adauga: tabel categorii/scop/temei/durata, callout fiscal 10 ani (Legea 82/1991), garantia "fara stocare date card" (PCI-DSS), transfer international (decizie de adecvare Canada + SCC 2021/914), card ANSPDCP cu adresa si link, securitate si minori.
+
+### Gotcha Shopify: politica gestionata automat
+- `shopPolicyUpdate` pentru `PRIVACY_POLICY` esueaza cu `Automatic management for Privacy Policy must be turned off` cat timp e activa gestionarea automata (Settings > Customer privacy).
+- Scriptul detecteaza eroarea, apeleaza `privacyFeaturesDisable(featuresToDisable: [PRIVACY_POLICY])` si reincearca. Gestionarea automata a fost dezactivata pe 2026-10-04; Shopify nu va mai rescrie textul.
+- Parserul `/policies/*` elimina tagul `<article>` si spatiile din atributele `style`, dar pastreaza flex/grid, badge-urile si tabelele. Verificarile de stil trebuie facute fara spatii (`align-items:flex-start`).
+
+### Puncte de validat de catre operator
+- Lista curierilor (Fan Courier, Sameday, DPD, Posta Romana) si mentiunea contabil CECCAR: de confirmat ca reflecta furnizorii reali.
+- Telefonul ANSPDCP (+40 318 059 211/212) provine din datele publice ale autoritatii; de reverificat periodic.
+- Newsletter-ul este descris ca serviciu bazat pe consimtamant; daca nu exista inca formular, sectiunea ramane valabila preventiv.
