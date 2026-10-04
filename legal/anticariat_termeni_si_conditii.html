@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Termeni și Condiții - Anticariat Albert</title>
+  <style>
+    .anticariat-legal-doc {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #1e293b;
+      background-color: #ffffff;
+      line-height: 1.65;
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 32px 20px 60px 20px;
+    }
+
+    .anticariat-legal-doc * {
+      box-sizing: border-box;
+    }
+
+    .anticariat-legal-doc header {
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 24px;
+      margin-bottom: 32px;
+    }
+
+    .anticariat-badge {
+      display: inline-block;
+      background-color: #fef3c7;
+      color: #92400e;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      margin-bottom: 12px;
+      border: 1px solid #fde68a;
+    }
+
+    .anticariat-legal-doc h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.25;
+      margin: 0 0 12px 0;
+    }
+
+    .anticariat-lead {
+      font-size: 1.05rem;
+      color: #475569;
+      margin: 0 0 16px 0;
+    }
+
+    .anticariat-meta-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.88rem;
+      color: #64748b;
+      background-color: #f8fafc;
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .anticariat-meta-item strong {
+      color: #334155;
+    }
+
+    /* Highlight Summary Cards Grid */
+    .anticariat-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 28px 0 36px 0;
+    }
+
+    .anticariat-summary-card {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 16px;
+      transition: box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .anticariat-summary-card:hover {
+      border-color: #94a3b8;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+    }
+
+    .anticariat-summary-card h4 {
+      margin: 0 0 6px 0;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .anticariat-summary-card p {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #475569;
+      line-height: 1.45;
+    }
+
+    /* Callout Boxes */
+    .anticariat-callout {
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 24px 0;
+      border-left: 5px solid;
+    }
+
+    .anticariat-callout-warning {
+      background-color: #fffbeb;
+      border-left-color: #d97706;
+      color: #78350f;
+    }
+
+    .anticariat-callout-warning h4 {
+      color: #92400e;
+      margin: 0 0 8px 0;
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .anticariat-callout-info {
+      background-color: #f0fdf4;
+      border-left-color: #16a34a;
+      color: #14532d;
+    }
+
+    .anticariat-callout-info h4 {
+      color: #166534;
+      margin: 0 0 8px 0;
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .anticariat-callout-legal {
+      background-color: #f1f5f9;
+      border-left-color: #3b82f6;
+      color: #1e3a8a;
+    }
+
+    .anticariat-callout-legal h4 {
+      color: #1d4ed8;
+      margin: 0 0 8px 0;
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .anticariat-callout p, .anticariat-callout ul {
+      margin: 0;
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+
+    .anticariat-callout ul {
+      padding-left: 20px;
+      margin-top: 8px;
+    }
+
+    /* Headings and Sections */
+    .anticariat-legal-doc section {
+      margin-bottom: 32px;
+    }
+
+    .anticariat-legal-doc h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 32px 0 14px 0;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .anticariat-legal-doc h2 .sec-nr {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background-color: #0f172a;
+      color: #ffffff;
+      font-size: 0.85rem;
+      font-weight: 700;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+
+    .anticariat-legal-doc h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1e293b;
+      margin: 20px 0 10px 0;
+    }
+
+    .anticariat-legal-doc p {
+      margin: 0 0 14px 0;
+      color: #334155;
+      font-size: 0.96rem;
+    }
+
+    .anticariat-legal-doc ul, .anticariat-legal-doc ol {
+      margin: 0 0 16px 0;
+      padding-left: 24px;
+      color: #334155;
+      font-size: 0.96rem;
+    }
+
+    .anticariat-legal-doc li {
+      margin-bottom: 8px;
+    }
+
+    /* Tables */
+    .anticariat-table-container {
+      overflow-x: auto;
+      margin: 20px 0;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+    }
+
+    .anticariat-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    .anticariat-table th {
+      background-color: #f1f5f9;
+      color: #0f172a;
+      font-weight: 700;
+      padding: 12px 16px;
+      border-bottom: 1px solid #cbd5e1;
+    }
+
+    .anticariat-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #e2e8f0;
+      color: #334155;
+      vertical-align: top;
+    }
+
+    .anticariat-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .anticariat-table tr:nth-child(even) td {
+      background-color: #f8fafc;
+    }
+
+    .anticariat-placeholder {
+      background-color: #fef08a;
+      color: #854d0e;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-weight: 600;
+      font-size: 0.88rem;
+    }
+
+    /* ANPC & SOL Special Banners */
+    .anpc-sol-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .anpc-sol-card {
+      border: 2px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 18px;
+      background: #f8fafc;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .anpc-sol-card h4 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .anpc-sol-card p {
+      font-size: 0.88rem;
+      color: #475569;
+      margin: 0;
+    }
+
+    .anpc-sol-btn {
+      display: inline-block;
+      background-color: #0f172a;
+      color: #ffffff !important;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.88rem;
+      padding: 10px 18px;
+      border-radius: 6px;
+      transition: background-color 0.2s ease;
+    }
+
+    .anpc-sol-btn:hover {
+      background-color: #334155;
+    }
+
+    .anticariat-contact-box {
+      background-color: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 18px;
+      margin: 20px 0;
+    }
+
+    .anticariat-contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 640px) {
+      .anticariat-legal-doc {
+        padding: 20px 14px 40px 14px;
+      }
+      .anticariat-legal-doc h1 {
+        font-size: 1.7rem;
+      }
+      .anticariat-legal-doc h2 {
+        font-size: 1.15rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<article class="anticariat-legal-doc">
+
+  <header>
+    <div class="anticariat-badge">Document Oficial &bull; Cadru Legal</div>
+    <h1>Termeni și Condiții de Utilizare</h1>
+    <p class="anticariat-lead">
+      Condiții generale de tranzacționare, achiziție la distanță și operare pentru librăria de anticariat <strong>Anticariat Albert</strong> (online și magazin fizic).
+    </p>
+    <div class="anticariat-meta-bar">
+      <div class="anticariat-meta-item"><strong>Librărie fizică:</strong> Str. Alexandru Lăpușneanu nr. 11, Iași</div>
+      <div class="anticariat-meta-item"><strong>Ultima actualizare:</strong> Octombrie 2026</div>
+      <div class="anticariat-meta-item"><strong>Conformitate:</strong> OUG 34/2014 &bull; OUG 140/2021 &bull; Codul Fiscal art. 312</div>
+    </div>
+  </header>
+
+  <!-- Highlight Cards Grid -->
+  <div class="anticariat-summary-grid">
+    <div class="anticariat-summary-card">
+      <h4>Exemplar Unic &bull; Anticariat</h4>
+      <p>Cărțile sunt în mare majoritate bunuri second-hand unicat, expuse simultan pe raftul fizic și online.</p>
+    </div>
+    <div class="anticariat-summary-card">
+      <h4>Confirmare Fizică</h4>
+      <p>Contractul la distanță se consideră încheiat la momentul confirmării disponibilității fizice pe raft.</p>
+    </div>
+    <div class="anticariat-summary-card">
+      <h4>Retur Legal 14 Zile</h4>
+      <p>Drept de retragere garantat în 14 zile calendaristice de la primire, conform OUG 34/2014.</p>
+    </div>
+    <div class="anticariat-summary-card">
+      <h4>Ridicare Gratuită</h4>
+      <p>Opțiune de ridicare directă din magazinul din Iași, Str. Alexandru Lăpușneanu nr. 11, fără costuri.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 1 -->
+  <section id="sectiunea-1">
+    <h2><span class="sec-nr">1</span> Dispoziții generale și date de identificare ale operatorului</h2>
+    <p>
+      Prezentul document stabilește termenii și condițiile de navigare pe site-ul web al anticariatului și de achiziționare la distanță a cărților, periodicelor, documentelor istorice, stampelor și celorlalte bunuri culturale de ocazie comercializate sub denumirea comercială <strong>Anticariat Albert</strong>.
+    </p>
+    <p>
+      Serviciile de comerț electronic și vânzarea cărților sunt operate de către:
+    </p>
+
+    <div class="anticariat-contact-box">
+      <div class="anticariat-contact-grid">
+        <div><strong>Denumire operator:</strong> <span class="anticariat-placeholder">[DENUMIRE_FIRMA_SRL]</span></div>
+        <div><strong>Cod Unic de Înregistrare (CUI):</strong> <span class="anticariat-placeholder">[CUI_FIRMA]</span></div>
+        <div><strong>Nr. Registrul Comerțului:</strong> <span class="anticariat-placeholder">[NUMAR_REGISTRU_COMERT]</span></div>
+        <div><strong>Sediu social:</strong> <span class="anticariat-placeholder">[SEDIU_SOCIAL]</span></div>
+        <div><strong>Punct de lucru (Magazin fizic):</strong> Strada Alexandru Lăpușneanu nr. 11, cod poștal 700259, Iași, România</div>
+        <div><strong>E-mail de contact:</strong> <span class="anticariat-placeholder">[EMAIL_CONTACT]</span></div>
+        <div><strong>Telefon asistență clienți:</strong> <span class="anticariat-placeholder">[TELEFON_CONTACT]</span></div>
+        <div><strong>Program magazin fizic:</strong> <span class="anticariat-placeholder">[PROGRAM_MAGAZIN]</span></div>
+      </div>
+    </div>
+
+    <p>
+      Relațiile contractuale dintre părți sunt guvernate de legislația română și europeană în vigoare, în mod special de următoarele acte normative:
+    </p>
+    <ul>
+      <li><strong>Legea nr. 365/2002</strong> privind comerțul electronic, republicată;</li>
+      <li><strong>Ordonanța de Urgență a Guvernului nr. 34/2014</strong> privind drepturile consumatorilor în cadrul contractelor încheiate cu profesioniștii;</li>
+      <li><strong>Ordonanța de Urgență a Guvernului nr. 140/2021</strong> privind anumite aspecte referitoare la contractele de vânzare de bunuri (aplicabilă conform regimului specific bunurilor second-hand);</li>
+      <li><strong>Legea nr. 227/2015 privind Codul Fiscal</strong>, cu modificările și completările ulterioare, Art. 312 (Regimul special pentru bunurile second-hand, opere de artă, obiecte de colecție și antichități);</li>
+      <li><strong>Regulamentul (UE) 2016/679 (GDPR)</strong> privind protecția persoanelor fizice în ceea ce privește prelucrarea datelor cu caracter personal.</li>
+    </ul>
+    <p>
+      Utilizarea site-ului, crearea unui cont de utilizator sau plasarea unei comenzi reprezintă acordul dumneavoastră expres și necondiționat cu privire la prevederile prezentului document.
+    </p>
+  </section>
+
+  <!-- SECTION 2 -->
+  <section id="sectiunea-2">
+    <h2><span class="sec-nr">2</span> Definiții și termeni utilizați</h2>
+    <p>În cuprinsul prezentului document, termenii de mai jos au următoarele semnificații:</p>
+    <ul>
+      <li><strong>Vânzător:</strong> Operatorul economic <span class="anticariat-placeholder">[DENUMIRE_FIRMA_SRL]</span>, ce desfășoară activitatea comercială a librăriei de anticariat Anticariat Albert.</li>
+      <li><strong>Cumpărător / Consumator:</strong> Orice persoană fizică cu vârsta minimă de 18 ani împliniți care achiziționează bunuri prin intermediul magazinului online în scopuri ce nu țin de activitatea sa comercială, industrială, artizanală sau profesională.</li>
+      <li><strong>Utilizator:</strong> Orice persoană fizică sau juridică ce accesează conținutul magazinului online, indiferent dacă plasează sau nu o comandă.</li>
+      <li><strong>Magazin Online:</strong> Platforma de comerț electronic găzduită online prin care Vânzătorul prezintă spre vânzare catalogul de cărți de anticariat.</li>
+      <li><strong>Magazin Fizic (Anticariat):</strong> Punctul de lucru fizic al Vânzătorului, situat în Strada Alexandru Lăpușneanu nr. 11, cod poștal 700259, Iași, România.</li>
+      <li><strong>Bunuri de anticariat / Second-hand:</strong> Cărți vechi, ediții epuizate, volume de ocazie, documente, periodice, manuscrise, hărți sau stampe, ce prezintă semne firești ale trecerii timpului sau ale lecturii anterioare și sunt comercializate în regim de bunuri folosite.</li>
+      <li><strong>Exemplar unic:</strong> Specificitatea volumelor din fondul de anticariat, reprezentând existența în stoc a unui singur volum cu particularitățile de uzură, legătură și proveniență descrise în fișa de produs.</li>
+      <li><strong>Comandă:</strong> Documentul electronic prin care Cumpărătorul transmite Vânzătorului intenția fermă de a achiziționa unul sau mai multe bunuri din catalogul online.</li>
+      <li><strong>Contract la distanță:</strong> Contractul încheiat între Vânzător și Cumpărător fără prezența fizică simultană a părților, utilizând exclusiv tehnica de comunicare la distanță, considerat valabil încheiat la data confirmării disponibilității fizice a exemplarului și expedierii acestuia (sau emiterii facturii).</li>
+    </ul>
+  </section>
+
+  <!-- SECTION 3 -->
+  <section id="sectiunea-3">
+    <h2><span class="sec-nr">3</span> Specificul produselor de anticariat și gradarea stării fizice</h2>
+
+    <div class="anticariat-callout anticariat-callout-warning">
+      <h4>Important: Concomitența stocului fizic și online</h4>
+      <p>
+        Cărțile prezentate pe site-ul nostru sunt expuse simultan pe rafturile magazinului fizic din Iași (Strada Alexandru Lăpușneanu nr. 11). Marea majoritate a cărților există în <strong>exemplar unic</strong>.
+      </p>
+      <p style="margin-top: 8px;">
+        Plasarea unei comenzi pe site constituie o ofertă fermă de cumpărare. Contractul la distanță se consideră încheiat <strong>numai în momentul în care personalul anticariatului verifică și confirmă fizic prezența cărții pe raft</strong> și pregătește coletul pentru expediere (sau emite factura fiscală).
+      </p>
+      <p style="margin-top: 8px;">
+        În situația rară în care un volum a fost achiziționat la tejghea în magazinul fizic chiar înainte de sincronizarea bazei de date cu comanda online, Vânzătorul va notifica de urgență Cumpărătorul. Comanda va fi anulată fără nicio penalitate, iar dacă plata a fost efectuată online cu cardul bancar, suma integrală va fi restituită în contul Cumpărătorului în termen de maximum 24 - 48 de ore lucrătoare.
+      </p>
+    </div>
+
+    <h3>Grila standard de evaluare a stării cărților</h3>
+    <p>
+      Fiecare carte este evaluată individual de personalul nostru specializat. Pe pagina fiecărui volum este indicat gradul de stare, conform următoarelor criterii obiective:
+    </p>
+
+    <div class="anticariat-table-container">
+      <table class="anticariat-table">
+        <thead>
+          <tr>
+            <th style="width: 22%;">Calificativ Stare</th>
+            <th style="width: 48%;">Descriere Detaliată</th>
+            <th style="width: 30%;">Aspecte Specifice</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Nouă / Nefolosită</strong></td>
+            <td>Volum provenit din lichidări de stoc de la edituri sau depozite, necitit, fără semne de utilizare anterioară.</td>
+            <td>Bloc de foi intact, copertă impecabilă, fără însemnări sau pliuri.</td>
+          </tr>
+          <tr>
+            <td><strong>Foarte bună</strong></td>
+            <td>Carte citită cu deosebită atenție sau păstrată cu grijă în bibliotecă personală.</td>
+            <td>Urme minime de manipulare sau de trecere a timpului; bloc curat, legătură solidă, fără sublinieri.</td>
+          </tr>
+          <tr>
+            <td><strong>Bună</strong></td>
+            <td>Stare normală pentru o carte citită și păstrată în condiții obișnuite.</td>
+            <td>Îngălbenire firească a hârtiei datorată vârstei, colțuri sau coperți ușor atinse; text 100% integru și perfect lizibil.</td>
+          </tr>
+          <tr>
+            <td><strong>Anticariat / Uzată</strong></td>
+            <td>Volum cu patină pronunțată a timpului, legătură slăbită, coperți uzate sau cu mici rupturi marginale.</td>
+            <td>Pot exista ștampile de bibliotecă casată, ex-librisuri sau sublinieri pe text (toate sunt menționate în descriere sau vizibile în poze).</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="anticariat-callout anticariat-callout-legal">
+      <h4>Notă privind conformitatea cărților second-hand</h4>
+      <p>
+        Patina firească a timpului, îngălbenirea hârtiei de-a lungul deceniilor, mirosul specific de carte veche, micile pete naturale de oxidare a fibrei lemnoase (foxing) sau micile asperități ale coperților menționate în descriere sau vizibile în fotografiile de produs <strong>nu constituie defecte de fabricație și nici vicii de conformitate</strong>, ci reflectă identitatea autentică a bunurilor de anticariat.
+      </p>
+      <p style="margin-top: 8px;">
+        Viciul legal de conformitate este recunoscut strict în cazul defectelor majore ascunse și nedeclarate în descriere (de exemplu: pagini de text lipsă care afectează substanțial opera, planșe sau hărți declarate dar absente fizic, bloc de foi complet desfăcut nespecificat).
+      </p>
+    </div>
+  </section>
+
+  <!-- SECTION 4 -->
+  <section id="sectiunea-4">
+    <h2><span class="sec-nr">4</span> Înregistrarea pe site, contul de utilizator și securitatea datelor</h2>
+    <p>
+      Pentru a plasa o comandă, Cumpărătorul poate alege fie să își creeze un cont personal de utilizator pe site, fie să finalizeze comanda ca vizitator (guest checkout).
+    </p>
+    <p>
+      Cumpărătorul este direct răspunzător pentru:
+    </p>
+    <ul>
+      <li>Furnizarea unor informații reale, exacte, complete și actualizate (nume, prenume, număr de telefon valid, adresă de e-mail corectă, adresă completă de livrare);</li>
+      <li>Păstrarea confidențialității parolei de acces asociate contului de client;</li>
+      <li>Toate acțiunile întreprinse prin intermediul contului său de utilizator.</li>
+    </ul>
+    <p>
+      Vânzătorul își rezervă dreptul de a restricționa accesul sau de a refuza onorarea unei comenzi în situația în care există suspiciuni justificate de fraudă, date de identificare vădit false sau tentative de abuz tehnic asupra platformei.
+    </p>
+  </section>
+
+  <!-- SECTION 5 -->
+  <section id="sectiunea-5">
+    <h2><span class="sec-nr">5</span> Plasarea comenzii și încheierea contractului la distanță</h2>
+    <p>Etapele parcurse pentru finalizarea unei comenzi online sunt următoarele:</p>
+    <ol>
+      <li>Selectarea cărților dorite și adăugarea acestora în coșul virtual de cumpărături;</li>
+      <li>Completarea datelor complete de contact, facturare și livrare;</li>
+      <li>Selectarea modalității de livrare (livrare prin curier rapid sau ridicare gratuită din magazinul fizic din Iași);</li>
+      <li>Alegerea modalității de plată preferate (plată online cu cardul, plată ramburs la livrare sau plată în anticariat);</li>
+      <li>Verificarea finală a comenzii și acceptarea explicită a prezentelor Termeni și Condiții;</li>
+      <li>Trimiterea comenzii prin apăsarea butonului dedicat de finalizare a comenzii.</li>
+    </ol>
+    <p>
+      Imediat după înregistrarea comenzii, sistemul expediază automat un e-mail de primire a comenzii. <strong>Acest prim mesaj reprezintă o confirmare a recepționării solicitării tehnice și nu constituie acceptarea definitivă a ofertei sau încheierea contractului.</strong>
+    </p>
+    <p>
+      Contractul la distanță se consideră încheiat în mod valabil în momentul în care Vânzătorul transmite Cumpărătorului notificarea de confirmare a disponibilității fizice a cărților, însoțită de confirmarea expedierii prin curier sau a pregătirii coletului pentru ridicare, moment la care este emisă și factura fiscală.
+    </p>
+  </section>
+
+  <!-- SECTION 6 -->
+  <section id="sectiunea-6">
+    <h2><span class="sec-nr">6</span> Prețuri, facturare și regimul TVA aplicabil bunurilor second-hand</h2>
+    <p>
+      Toate prețurile afișate în cadrul magazinului online sunt exprimate în <strong>RON (Lei)</strong> și reprezintă prețul final de vânzare către consumator.
+    </p>
+    <div class="anticariat-callout anticariat-callout-legal">
+      <h4>Regimul fiscal al bunurilor second-hand (Art. 312 Cod Fiscal)</h4>
+      <p>
+        Comercializarea cărților și bunurilor de anticariat se desfășoară sub <strong>regimul special al marjei de profit</strong>, reglementat expres de art. 312 din Legea nr. 227/2015 privind Codul Fiscal.
+      </p>
+      <p style="margin-top: 8px;">
+        În conformitate cu dispozițiile legale în vigoare, pe facturile fiscale emise pentru livrarea de bunuri second-hand taxa pe valoarea adăugată (TVA) <strong>nu se evidențiază separat</strong>, pe documentul fiscal fiind înscrisă mențiunea legală obligatorie: <em>"regimul marjei - bunuri second-hand"</em>.
+      </p>
+    </div>
+    <p>
+      Factura fiscală este emisă în format electronic și este expediată Cumpărătorului pe adresa de e-mail furnizată la plasarea comenzii, fiind disponibilă și în coletul fizic expediat.
+    </p>
+    <p>
+      Prețul final plătit de Cumpărător este alcătuit din prețul cărților comandate la care se adaugă, după caz, tariful de transport aferent serviciului de curierat. În cazul opțiunii de ridicare personală din magazinul din Iași, taxa de livrare este 0 (zero) RON.
+    </p>
+  </section>
+
+  <!-- SECTION 7 -->
+  <section id="sectiunea-7">
+    <h2><span class="sec-nr">7</span> Modalități de plată</h2>
+    <p>Anticariat Albert pune la dispoziția clienților următoarele modalități de plată flexibile și sigure:</p>
+    <ul>
+      <li>
+        <strong>Plată online securizată cu cardul bancar:</strong> Tranzacțiile sunt procesate prin intermediul platformei securizate Shopify Payments / partener bancar autorizat. Sunt acceptate carduri Visa, MasterCard și Maestro. Tranzacțiile beneficiază de autentificare strictă conform standardelor 3D Secure. Anticariatul nu solicită, nu stochează și nu are acces la datele confidențiale ale cardului dumneavoastră bancar.
+      </li>
+      <li>
+        <strong>Plată ramburs (numerar la livrare):</strong> Comanda se achită direct agentului de curierat în momentul predării fizice a coletului la adresa de destinație. Curierul eliberează o chitanță fiscală pentru suma încasată.
+      </li>
+      <li>
+        <strong>Plată în magazinul fizic din Iași:</strong> În cazul selectării opțiunii de ridicare personală, comanda poate fi achitată direct la tejgheaua anticariatului (Str. Alexandru Lăpușneanu nr. 11, Iași), fie în numerar, fie cu cardul bancar la terminalul POS al magazinului.
+      </li>
+    </ul>
+  </section>
+
+  <!-- SECTION 8 -->
+  <section id="sectiunea-8">
+    <h2><span class="sec-nr">8</span> Livrarea produselor și ridicarea din magazinul fizic</h2>
+
+    <h3>1. Livrare prin curier rapid pe teritoriul României</h3>
+    <p>
+      Livrarea comenzilor se realizează prin intermediul companiilor de curierat rapid partenere. Termenul estimativ de livrare este de <strong>24 - 48 de ore lucrătoare</strong> de la momentul confirmării disponibilității fizice a exemplarului și predării pachetului către curier.
+    </p>
+    <p>
+      Costul transportului este calculat și afișat în mod transparent în coșul de cumpărături înainte de transmiterea comenzii. În perioade de sărbători legale, condiții meteorologice severe sau perioade de vârf comercial, pot interveni decalaje independente de voința anticariatului.
+    </p>
+
+    <h3>2. Ridicare personală gratuită din magazinul fizic (Iași)</h3>
+    <p>
+      Clienții pot alege să ridice personal comanda direct din librăria noastră de anticariat situată la adresa:
+      <br>
+      <strong>Strada Alexandru Lăpușneanu nr. 11, cod poștal 700259, Iași, România.</strong>
+    </p>
+    <div class="anticariat-callout anticariat-callout-info">
+      <h4>Condiții pentru ridicarea din magazin</h4>
+      <ul>
+        <li>Costul serviciului de pregătire și predare este <strong>0 RON (Gratuit)</strong>.</li>
+        <li>După pregătirea cărților, Cumpărătorul primește o notificare prin e-mail sau SMS care confirmă că volumul este gata pentru ridicare.</li>
+        <li><strong>Termen de rezervare:</strong> Comanda este păstrată rezervată la tejghea timp de <strong>5 zile lucrătoare</strong> de la trimiterea notificării.</li>
+        <li>Dacă Cumpărătorul nu se prezintă în termenul de 5 zile lucrătoare și nu solicită o prelungire în scris sau telefonic, comanda se anulează automat, iar cartea revine în oferta publică a magazinului.</li>
+      </ul>
+    </div>
+
+    <h3>Recepția coletului</h3>
+    <p>
+      La primirea pachetului, vă rugăm să verificați integritatea ambalajului exterior. În situația în care coletul prezintă urme vizibile de deteriorare gravă sau desigilare, solicitați curierului întocmirea pe loc a unui proces-verbal de constatare a stării ambalajului înainte de acceptarea expedierii.
+    </p>
+  </section>
+
+  <!-- SECTION 9 -->
+  <section id="sectiunea-9">
+    <h2><span class="sec-nr">9</span> Dreptul de retragere (Politica de retur conform OUG 34/2014)</h2>
+    <p>
+      În conformitate cu prevederile art. 9 alin. (1) din Ordonanța de Urgență a Guvernului nr. 34/2014, Cumpărătorul persoană fizică beneficiază de o perioadă de <strong>14 zile calendaristice</strong> pentru a se retrage dintr-un contract la distanță, fără a fi nevoit să justifice decizia de retragere.
+    </p>
+
+    <div class="anticariat-callout anticariat-callout-info">
+      <h4>Ghid pas cu pas pentru exercitarea dreptului de retur</h4>
+      <ol style="margin: 0; padding-left: 20px;">
+        <li><strong>Termen:</strong> Înștiințarea trebuie transmisă în termen de maximum 14 zile calendaristice de la data la care Cumpărătorul a intrat în posesia fizică a cărții.</li>
+        <li><strong>Modalitate:</strong> Prin transmiterea unei notificări neechivoce scrise către adresa de e-mail <span class="anticariat-placeholder">[EMAIL_CONTACT]</span>, precizând numărul comenzii, titlul cărților returnate și datele de identificare.</li>
+        <li><strong>Adresa de expediere a returului:</strong> Coletul trebuie expediat la adresa magazinului fizic: <em>Anticariat Albert, Strada Alexandru Lăpușneanu nr. 11, cod poștal 700259, Iași, România</em>.</li>
+        <li><strong>Costul transportului de retur:</strong> Conform art. 14 alin. (2) din OUG 34/2014, <strong>costurile directe legate de returnarea produselor sunt suportate în mod integral de către Cumpărător</strong>. Coletul poate fi trimis prin orice firmă de curierat rapid (nu se acceptă expedieri cu plată ramburs sau colete trimise prin poștă simplă fără livrare directă la sediu).</li>
+      </ol>
+    </div>
+
+    <h3>Starea cărților la returnare</h3>
+    <p>
+      Fiind vorba despre bunuri culturale de anticariat, cartea trebuie returnată în aceeași stare fizică în care a fost recepționată de Cumpărător, ambalată corespunzător pentru a preveni deteriorarea în timpul transportului, împreună cu eventualele supracoperți, planșe, hărți sau anexe incluse inițial.
+    </p>
+    <p>
+      Cumpărătorul este responsabil doar pentru diminuarea valorii bunurilor care rezultă din manipulări altele decât cele strict necesare pentru determinarea naturii, caracteristicilor și funcționării cărților. În cazul în care un volum returnat prezintă degradări fizice suplimentare provocate din vina Cumpărătorului (pagini rupte, pete noi, foi lipsă, adnotări noi), Vânzătorul își rezervă dreptul legal de a reține o cotă-parte proporțională cu deprecierea suferită de volum.
+    </p>
+
+    <h3>Rambursarea contravalorii</h3>
+    <p>
+      Vânzătorul va rambursa toate sumele primite drept plată din partea Cumpărătorului, inclusiv, după caz, costurile livrării inițiale standard, în termen de maximum <strong>14 zile calendaristice</strong> de la data la care este informat despre decizia de retragere.
+    </p>
+    <p>
+      Conform art. 13 alin. (3) din OUG 34/2014, Vânzătorul are dreptul de a amâna rambursarea sumelor până la data la care primește fizic bunurile returnate sau până la momentul la care Cumpărătorul a furnizat dovada că a trimis bunurile către Vânzător, oricare dintre aceste date este mai apropiată, pentru a permite verificarea conformității exemplarului returnat.
+    </p>
+    <p>
+      Rambursarea sumelor se efectuează prin virament în contul bancar (IBAN) indicat de client sau prin creditarea cardului bancar utilizat la efectuarea plății online, fără comisioane aplicate consumatorului.
+    </p>
+  </section>
+
+  <!-- SECTION 10 -->
+  <section id="sectiunea-10">
+    <h2><span class="sec-nr">10</span> Garanția legală de conformitate (OUG 140/2021)</h2>
+    <p>
+      Bunurile comercializate de Anticariat Albert beneficiază de garanția legală de conformitate reglementată de <strong>Ordonanța de Urgență a Guvernului nr. 140/2021</strong>, interpretată și aplicată în raport strict cu natura specifică de <strong>bunuri second-hand</strong>.
+    </p>
+    <p>
+      În cazul cărților vechi de anticariat, conformitatea este evaluată strict prin raportare la descrierea individuală din fișa de produs, categoria de stare atribuită și fotografiile anexate. Urmele obișnuite de trecere a vremii (îngălbenirea colilor, colțuri tocite, mici imperfecțiuni menționate pe site) sunt trăsături normale ale volumelor vechi și nu pot fi invocate drept neconformități.
+    </p>
+    <p>
+      În situația dovedirii unui viciu major de conformitate nedeclarat (de exemplu, fascicule de text absente, volum incomplet fără ca acest lucru să fi fost specificat), Cumpărătorul are dreptul la restituirea contravalorii achitate sau la înlocuirea volumului cu un alt exemplar identic (dacă acesta există în stocul anticariatului), toate costurile de transport asociate remedierii fiind suportate de Vânzător.
+    </p>
+  </section>
+
+  <!-- SECTION 11 -->
+  <section id="sectiunea-11">
+    <h2><span class="sec-nr">11</span> Drepturi de proprietate intelectuală</h2>
+    <p>
+      Întreg conținutul magazinului online, incluzând, dar fără a se limita la: denumirea comercială "Anticariat Albert", siglele, elementele de design web, descrierile de carte, recenziile bio-bibliografice originale, fotografiile de produs realizate în cadrul anticariatului, structura bazelor de date și codul sursă reprezintă proprietatea intelectuală exclusivă a <span class="anticariat-placeholder">[DENUMIRE_FIRMA_SRL]</span> sau a partenerilor săi licențiați, fiind protejate de Legea nr. 8/1996 privind dreptul de autor și drepturile conexe.
+    </p>
+    <p>
+      Este strict interzisă copierea, reproducerea, descărcarea sistematică neautorizată (web scraping), distribuirea sau exploatarea publică ori comercială a oricărui conținut aparținând site-ului fără acordul prealabil exprimat în formă scrisă de către conducerea Anticariat Albert.
+    </p>
+  </section>
+
+  <!-- SECTION 12 -->
+  <section id="sectiunea-12">
+    <h2><span class="sec-nr">12</span> Prelucrarea datelor cu caracter personal (GDPR) și Cookie-uri</h2>
+    <p>
+      Anticariat Albert prelucrează datele dumneavoastră cu caracter personal în conformitate cu <strong>Regulamentul (UE) 2016/679 (GDPR)</strong> și legislația națională aplicabilă în domeniul protecției datelor.
+    </p>
+    <p>
+      Datele cu caracter personal furnizate (nume, prenume, adresă poștală, număr de telefon, e-mail) sunt colectate și utilizate în scopuri legitime:
+    </p>
+    <ul>
+      <li>Preluarea, validarea, facturarea fiscală și livrarea fizică a comenzilor;</li>
+      <li>Comunicarea stadiului comenzii sau soluționarea cererilor de retur și asistență clienți;</li>
+      <li>Îndeplinirea obligațiilor legale de evidență contabilă și păstrare a documentelor fiscale.</li>
+    </ul>
+    <p>
+      În calitate de persoană vizată, beneficiați de toate drepturile prevăzute de GDPR: dreptul de acces la date, dreptul la rectificare, dreptul la ștergerea datelor ("dreptul de a fi uitat"), dreptul la restricționarea prelucrării, dreptul la portabilitatea datelor și dreptul de opoziție.
+    </p>
+    <p>
+      Pentru exercitarea acestor drepturi, ne puteți contacta prin e-mail la adresa: <span class="anticariat-placeholder">[EMAIL_CONTACT]</span>. De asemenea, aveți dreptul de a depune o plângere la <strong>Autoritatea Națională de Supraveghere a Prelucrării Datelor cu Caracter Personal (ANSPDCP)</strong>, cu sediul în B-dul G-ral. Gheorghe Magheru 28-30, Sector 1, București, website: <a href="https://www.dataprotection.ro/" target="_blank" rel="noopener noreferrer">www.dataprotection.ro</a>.
+    </p>
+    <p>
+      Site-ul utilizează module cookie strict necesare pentru funcționarea tehnică a sesiunilor de cumpărare și cookies de analiză agregată. Pentru detalii complete privind politica de cookie-uri, consultați secțiunea dedicată de pe site.
+    </p>
+  </section>
+
+  <!-- SECTION 13 -->
+  <section id="sectiunea-13">
+    <h2><span class="sec-nr">13</span> Reclamații, litigii și soluționarea alternativă (ANPC și SOL)</h2>
+    <p>
+      Pentru orice sugestie, sesizare sau neclaritate legată de comenzi sau produse, vă încurajăm să ne contactați prioritar la adresa de e-mail <span class="anticariat-placeholder">[EMAIL_CONTACT]</span> sau la numărul de telefon <span class="anticariat-placeholder">[TELEFON_CONTACT]</span>. Echipa noastră va depune toate eforturile pentru soluționarea oricărui diferend pe cale amiabilă în termen de maximum 30 de zile calendaristice.
+    </p>
+    <p>
+      În conformitate cu normele legale de protecție a consumatorilor, Cumpărătorul are la dispoziție căile legale oficiale de petiționare și soluționare alternativă a litigiilor prezentate mai jos:
+    </p>
+
+    <!-- ANPC & SOL Action Banners -->
+    <div class="anpc-sol-grid">
+      <div class="anpc-sol-card">
+        <div>
+          <h4>Autoritatea Națională pentru Protecția Consumatorilor (ANPC)</h4>
+          <p style="margin-top: 8px;">
+            Informații oficiale privind drepturile consumatorilor, depunere de reclamații și linie de consiliere gratuită.
+          </p>
+        </div>
+        <a href="https://anpc.ro/" target="_blank" rel="noopener noreferrer" class="anpc-sol-btn">
+          Accesează Portalul ANPC (anpc.ro)
+        </a>
+      </div>
+
+      <div class="anpc-sol-card">
+        <div>
+          <h4>Platforma Europeană SOL / ODR</h4>
+          <p style="margin-top: 8px;">
+            Soluționarea Online a Litigiilor pentru tranzacții transfrontaliere și naționale încheiate pe internet în UE.
+          </p>
+        </div>
+        <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener noreferrer" class="anpc-sol-btn">
+          Accesează Platforma SOL / ODR
+        </a>
+      </div>
+    </div>
+
+    <p>
+      În cazul în care o dispută între Cumpărător și Vânzător nu poate fi soluționată pe cale amiabilă sau prin mecanisme de soluționare alternativă, competența de judecată revine instanțelor judecătorești competente potrivit legii române.
+    </p>
+  </section>
+
+  <!-- SECTION 14 -->
+  <section id="sectiunea-14">
+    <h2><span class="sec-nr">14</span> Dispoziții finale și modificarea termenilor</h2>
+    <p>
+      <strong>Forță majoră:</strong> Niciuna dintre părțile contractante nu răspunde pentru neexecutarea la termen sau executarea necorespunzătoare a oricărei obligații dacă aceasta a fost cauzată de un eveniment de forță majoră sau caz fortuit, conform definițiilor Codului Civil român.
+    </p>
+    <p>
+      <strong>Nulitate parțială:</strong> Dacă o prevedere din prezentul document este declarată nevalidă, nulă sau inaplicabilă de o instanță judecătorească, respectiva decizie nu va afecta valabilitatea celorlalte clauze, care vor continua să producă efecte depline.
+    </p>
+    <p>
+      <strong>Actualizarea termenilor:</strong> Vânzătorul își rezervă dreptul de a modifica și actualiza prezentele Termeni și Condiții fără o notificare individuală prealabilă, pentru a se conforma modificărilor legislative sau îmbunătățirii serviciilor oferite. Versiunea aplicabilă fiecărui contract este cea afișată pe site la momentul exact al transmiterii comenzii de către Cumpărător.
+    </p>
+    <p style="margin-top: 24px; font-size: 0.9rem; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 14px;">
+      Document redactat în conformitate cu legislația națională și europeană în vigoare. Toate drepturile rezervate &copy; Anticariat Albert.
+    </p>
+  </section>
+
+</article>
+
+</body>
+</html>
