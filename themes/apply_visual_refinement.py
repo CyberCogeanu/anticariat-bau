@@ -56,12 +56,12 @@ HERITAGE_CSS = """/* anticariat-theme: antiquarian bibliophile heritage styling 
   --color-walnut-metadata: #61574E;
 }
 
-/* Card Harmonization: subtle archival nested tone and soft 1px linen border */
+/* Card Harmonization: subtle archival nested tone, 1px linen border, and clipped corners */
 .product-card .product-grid__card {
   background-color: var(--color-nested-card);
   border: 1px solid var(--color-card-border);
   border-radius: 4px;
-  padding: 10px;
+  overflow: hidden;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -70,7 +70,7 @@ HERITAGE_CSS = """/* anticariat-theme: antiquarian bibliophile heritage styling 
   box-shadow: 0 4px 14px rgba(32, 28, 24, 0.06);
 }
 
-/* Product Card Title & Price typography */
+/* Product Card Title & Price typography and inset padding */
 .product-card a[ref="productTitleLink"],
 .product-card .product-title,
 .product-card p[role="heading"] {
@@ -80,9 +80,38 @@ HERITAGE_CSS = """/* anticariat-theme: antiquarian bibliophile heritage styling 
   line-height: 1.35;
 }
 
+.product-card a[ref="productTitleLink"] {
+  display: block;
+  padding-inline: 12px !important;
+  padding-block-start: 10px !important;
+  padding-block-end: 2px !important;
+  text-align: left;
+}
+
+.product-card a[ref="productTitleLink"] .text-block {
+  padding-inline-start: 0 !important;
+  padding-inline-end: 0 !important;
+  padding-block-start: 0 !important;
+  padding-block-end: 0 !important;
+  text-align: left !important;
+}
+
+.product-card product-price {
+  display: block;
+  padding-inline: 12px !important;
+  padding-block-start: 0 !important;
+  padding-block-end: 12px !important;
+  text-align: left !important;
+}
+
+.product-card product-price [ref="priceContainer"] {
+  text-align: left !important;
+}
+
 .product-card .price {
   color: var(--color-foreground, #201C18);
   font-weight: 600;
+  text-align: left;
 }
 
 /* Quick Add button styling */
@@ -386,10 +415,11 @@ def harmonize_template_headings(content: str, filename: str) -> Tuple[str, bool]
 
     modified = False
 
-    def walk_and_update(obj):
+    def walk_and_update(obj, in_product_card=False):
         nonlocal modified
         if isinstance(obj, dict):
             t = obj.get("type", "")
+            is_card = in_product_card or (t in ["_product-card", "product-card"])
             settings = obj.get("settings")
             if isinstance(settings, dict):
                 font = settings.get("font")
@@ -407,11 +437,38 @@ def harmonize_template_headings(content: str, filename: str) -> Tuple[str, bool]
                     settings["font"] = "var(--font-heading--family)"
                     modified = True
 
+                # Inset padding and left alignment for card product title and price
+                if in_product_card:
+                    if "title" in t or "product_title" in obj.get("name", ""):
+                        if (settings.get("padding-inline-start") != 12 or
+                            settings.get("padding-inline-end") != 12 or
+                            settings.get("padding-block-start") != 8 or
+                            settings.get("padding-block-end") != 2 or
+                            settings.get("alignment") != "left"):
+                            settings["alignment"] = "left"
+                            settings["padding-inline-start"] = 12
+                            settings["padding-inline-end"] = 12
+                            settings["padding-block-start"] = 8
+                            settings["padding-block-end"] = 2
+                            modified = True
+                    elif "price" in t or "price" in obj.get("name", ""):
+                        if (settings.get("padding-inline-start") != 12 or
+                            settings.get("padding-inline-end") != 12 or
+                            settings.get("padding-block-start") != 0 or
+                            settings.get("padding-block-end") != 12 or
+                            settings.get("alignment") != "left"):
+                            settings["alignment"] = "left"
+                            settings["padding-inline-start"] = 12
+                            settings["padding-inline-end"] = 12
+                            settings["padding-block-start"] = 0
+                            settings["padding-block-end"] = 12
+                            modified = True
+
             for v in obj.values():
-                walk_and_update(v)
+                walk_and_update(v, is_card)
         elif isinstance(obj, list):
             for item in obj:
-                walk_and_update(item)
+                walk_and_update(item, in_product_card)
 
     walk_and_update(data)
     new_content = (leading_comment + json.dumps(data, indent=2) + "\n") if leading_comment else (json.dumps(data, indent=2) + "\n")
@@ -591,21 +648,34 @@ def rollback_template_headings(content: str, filename: str) -> Tuple[str, bool]:
 
     modified = False
 
-    def walk_and_revert(obj):
+    def walk_and_revert(obj, in_product_card=False):
         nonlocal modified
         if isinstance(obj, dict):
+            t = obj.get("type", "")
+            is_card = in_product_card or (t in ["_product-card", "product-card"])
             settings = obj.get("settings")
             if isinstance(settings, dict):
                 font = settings.get("font")
                 if font == "var(--font-heading--family)":
                     settings["font"] = "var(--font-body--family)"
                     modified = True
+                if in_product_card:
+                    if settings.get("padding-inline-start") == 12:
+                        settings["padding-inline-start"] = 0
+                        settings["padding-inline-end"] = 0
+                        if "title" in t or "product_title" in obj.get("name", ""):
+                            settings["padding-block-start"] = 4
+                            settings["padding-block-end"] = 0
+                        elif "price" in t or "price" in obj.get("name", ""):
+                            settings["padding-block-start"] = 0
+                            settings["padding-block-end"] = 0
+                        modified = True
 
             for v in obj.values():
-                walk_and_revert(v)
+                walk_and_revert(v, is_card)
         elif isinstance(obj, list):
             for item in obj:
-                walk_and_revert(item)
+                walk_and_revert(item, in_product_card)
 
     walk_and_revert(data)
     new_content = (leading_comment + json.dumps(data, indent=2) + "\n") if leading_comment else (json.dumps(data, indent=2) + "\n")
