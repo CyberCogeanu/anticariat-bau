@@ -50,7 +50,7 @@ The rollback procedure is 100% deterministic:
 ## Affected Theme Assets
 1. `config/settings_data.json`: Centralized color palette, button radiuses, typography bindings.
 2. `assets/base.css`: Appended with marked block `/* anticariat-theme: antiquarian bibliophile heritage styling */`.
-3. Template JSON files (`templates/index.json`, `templates/collection.json`, `templates/product.json`, etc.): Headings and product titles mapped to `var(--font-heading--family)`.
+3. Template JSON files (`templates/index.json`, `templates/collection.json`, `templates/product.json`, etc.): Headings and product titles mapped to `var(--font-heading--family)`; product card title and price configured with 12px inset padding and left alignment.
 
 ## Verification Protocol
 1. **API Asset Check**: Ensure GraphQL `themeFilesUpsert` mutation succeeds with zero userErrors.
