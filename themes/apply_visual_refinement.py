@@ -70,7 +70,7 @@ HERITAGE_CSS = """/* anticariat-theme: antiquarian bibliophile heritage styling 
   box-shadow: 0 4px 14px rgba(32, 28, 24, 0.06);
 }
 
-/* Product Card Title & Price typography and inset padding */
+/* Product Card Title & Price typography and centered inset padding */
 .product-card a[ref="productTitleLink"],
 .product-card .product-title,
 .product-card p[role="heading"] {
@@ -78,6 +78,7 @@ HERITAGE_CSS = """/* anticariat-theme: antiquarian bibliophile heritage styling 
   color: var(--color-foreground, #201C18);
   font-weight: 600;
   line-height: 1.35;
+  text-align: center !important;
 }
 
 .product-card a[ref="productTitleLink"] {
@@ -85,7 +86,7 @@ HERITAGE_CSS = """/* anticariat-theme: antiquarian bibliophile heritage styling 
   padding-inline: 12px !important;
   padding-block-start: 10px !important;
   padding-block-end: 2px !important;
-  text-align: left;
+  text-align: center !important;
 }
 
 .product-card a[ref="productTitleLink"] .text-block {
@@ -93,7 +94,9 @@ HERITAGE_CSS = """/* anticariat-theme: antiquarian bibliophile heritage styling 
   padding-inline-end: 0 !important;
   padding-block-start: 0 !important;
   padding-block-end: 0 !important;
-  text-align: left !important;
+  text-align: center !important;
+  justify-content: center !important;
+  margin-inline: auto !important;
 }
 
 .product-card product-price {
@@ -101,17 +104,20 @@ HERITAGE_CSS = """/* anticariat-theme: antiquarian bibliophile heritage styling 
   padding-inline: 12px !important;
   padding-block-start: 0 !important;
   padding-block-end: 12px !important;
-  text-align: left !important;
+  text-align: center !important;
+  justify-content: center !important;
 }
 
 .product-card product-price [ref="priceContainer"] {
-  text-align: left !important;
+  text-align: center !important;
+  display: flex !important;
+  justify-content: center !important;
 }
 
 .product-card .price {
   color: var(--color-foreground, #201C18);
   font-weight: 600;
-  text-align: left;
+  text-align: center;
 }
 
 /* Quick Add button styling */
@@ -437,15 +443,15 @@ def harmonize_template_headings(content: str, filename: str) -> Tuple[str, bool]
                     settings["font"] = "var(--font-heading--family)"
                     modified = True
 
-                # Inset padding and left alignment for card product title and price
+                # Inset padding and center alignment for card product title and price
                 if in_product_card:
                     if "title" in t or "product_title" in obj.get("name", ""):
                         if (settings.get("padding-inline-start") != 12 or
                             settings.get("padding-inline-end") != 12 or
                             settings.get("padding-block-start") != 8 or
                             settings.get("padding-block-end") != 2 or
-                            settings.get("alignment") != "left"):
-                            settings["alignment"] = "left"
+                            settings.get("alignment") != "center"):
+                            settings["alignment"] = "center"
                             settings["padding-inline-start"] = 12
                             settings["padding-inline-end"] = 12
                             settings["padding-block-start"] = 8
@@ -456,8 +462,8 @@ def harmonize_template_headings(content: str, filename: str) -> Tuple[str, bool]
                             settings.get("padding-inline-end") != 12 or
                             settings.get("padding-block-start") != 0 or
                             settings.get("padding-block-end") != 12 or
-                            settings.get("alignment") != "left"):
-                            settings["alignment"] = "left"
+                            settings.get("alignment") != "center"):
+                            settings["alignment"] = "center"
                             settings["padding-inline-start"] = 12
                             settings["padding-inline-end"] = 12
                             settings["padding-block-start"] = 0
