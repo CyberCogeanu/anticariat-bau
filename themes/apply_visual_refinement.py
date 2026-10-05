@@ -114,7 +114,8 @@ HERITAGE_CSS = """/* anticariat-theme: antiquarian bibliophile heritage styling 
 }
 
 /* Bibliographic specification table harmony */
-.anticariat-spec-table {
+.anticariat-spec-table,
+.anticariat-specs-block {
   border-color: var(--color-card-border) !important;
   background-color: var(--color-nested-card) !important;
 }
