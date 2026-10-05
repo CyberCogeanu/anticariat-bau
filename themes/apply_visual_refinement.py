@@ -481,9 +481,140 @@ def verify_live_storefront(domain: str, storefront_password: str) -> None:
         print("[WARN] 'Libre Baskerville' font family not found in HTML head.")
 
 
+def rollback_settings_data(content: str) -> Tuple[str, bool]:
+    comment_match = re.match(r"^(\s*/\*.*?\*/\s*)", content, flags=re.DOTALL)
+    leading_comment = comment_match.group(1) if comment_match else ""
+    json_text = content[len(leading_comment):].strip()
+    data = json.loads(json_text)
+
+    modified = False
+
+    palette_revert = {
+        "background": "#ffffff",
+        "foreground": "#000000",
+        "color1": "#333333",
+        "color2": "#DFDFDF",
+    }
+
+    settings_revert = {
+        "page_background_color": "{{ settings.color_palette.background }}",
+        "page_text_color": "{{ settings.color_palette.foreground }}",
+        "drawer_background_color": "{{ settings.color_palette.background }}",
+        "drawer_text_color": "{{ settings.color_palette.foreground }}",
+        "drawer_border_color": "{{ settings.color_palette.color2 }}",
+        "popover_background_color": "{{ settings.color_palette.background }}",
+        "popover_text_color": "{{ settings.color_palette.foreground }}",
+        "popover_border_color": "{{ settings.color_palette.color2 }}",
+        "popover_border_radius": 14,
+        "badge_sale_background_color": "{{ settings.color_palette.background }}",
+        "badge_sale_text_color": "{{ settings.color_palette.foreground }}",
+        "badge_sold_out_background_color": "#eef1ea",
+        "badge_sold_out_text_color": "{{ settings.color_palette.foreground }}",
+        "palette_primary_button_background": "{{ settings.color_palette.foreground }}",
+        "palette_primary_button_text": "{{ settings.color_palette.background }}",
+        "palette_primary_button_border": "{{ settings.color_palette.foreground }}",
+        "button_border_radius_primary": 14,
+        "palette_secondary_button_background": "rgba(0,0,0,0)",
+        "palette_secondary_button_text": "{{ settings.color_palette.foreground }}",
+        "palette_secondary_button_border": "{{ settings.color_palette.foreground }}",
+        "button_border_radius_secondary": 14,
+        "quick_add_background": "{{ settings.color_palette.background }}",
+        "quick_add_text": "{{ settings.color_palette.foreground }}",
+        "palette_input_background": "{{ settings.color_palette.background }}",
+        "palette_input_text": "{{ settings.color_palette.color1 }}",
+        "palette_input_border": "{{ settings.color_palette.color2 }}",
+        "inputs_border_radius": 4,
+        "palette_variant_background": "{{ settings.color_palette.background }}",
+        "palette_variant_text": "{{ settings.color_palette.foreground }}",
+        "palette_variant_border": "{{ settings.color_palette.color2 }}",
+        "palette_selected_variant_background": "{{ settings.color_palette.foreground }}",
+        "palette_selected_variant_text": "{{ settings.color_palette.background }}",
+        "palette_selected_variant_border": "{{ settings.color_palette.foreground }}",
+        "variant_button_radius": 14,
+        "card_corner_radius": 4,
+        "type_heading_font": "inter_n7",
+        "type_accent_font": "inter_n7",
+        "type_body_font": "inter_n4",
+        "type_subheading_font": "inter_n5",
+        "type_font_h1": "heading",
+        "type_font_h2": "heading",
+        "type_font_h3": "heading",
+        "type_font_h4": "heading",
+        "type_font_h5": "subheading",
+        "type_font_h6": "subheading",
+        "type_line_height_paragraph": "body-loose",
+    }
+
+    curr = data.setdefault("current", {})
+    curr_palette = curr.setdefault("color_palette", {})
+    for k, v in palette_revert.items():
+        if curr_palette.get(k) != v:
+            curr_palette[k] = v
+            modified = True
+
+    for k, v in settings_revert.items():
+        if curr.get(k) != v:
+            curr[k] = v
+            modified = True
+
+    presets = data.get("presets", {})
+    if "Horizon" in presets:
+        hz = presets["Horizon"]
+        hz_palette = hz.setdefault("color_palette", {})
+        for k, v in palette_revert.items():
+            if hz_palette.get(k) != v:
+                hz_palette[k] = v
+                modified = True
+        for k, v in settings_revert.items():
+            if hz.get(k) != v:
+                hz[k] = v
+                modified = True
+
+    new_content = (leading_comment + json.dumps(data, indent=2) + "\n") if leading_comment else (json.dumps(data, indent=2) + "\n")
+    return new_content, modified
+
+
+def rollback_base_css(content: str) -> Tuple[str, bool]:
+    pattern = re.compile(r"\n*" + re.escape(START_CSS_MARKER) + r"[\s\S]*?" + re.escape(END_CSS_MARKER) + r"\n*")
+    if pattern.search(content):
+        new_content = pattern.sub("\n", content)
+        return new_content, True
+    return content, False
+
+
+def rollback_template_headings(content: str, filename: str) -> Tuple[str, bool]:
+    comment_match = re.match(r"^(\s*/\*.*?\*/\s*)", content, flags=re.DOTALL)
+    leading_comment = comment_match.group(1) if comment_match else ""
+    json_text = content[len(leading_comment):].strip()
+    data = json.loads(json_text)
+
+    modified = False
+
+    def walk_and_revert(obj):
+        nonlocal modified
+        if isinstance(obj, dict):
+            settings = obj.get("settings")
+            if isinstance(settings, dict):
+                font = settings.get("font")
+                if font == "var(--font-heading--family)":
+                    settings["font"] = "var(--font-body--family)"
+                    modified = True
+
+            for v in obj.values():
+                walk_and_revert(v)
+        elif isinstance(obj, list):
+            for item in obj:
+                walk_and_revert(item)
+
+    walk_and_revert(data)
+    new_content = (leading_comment + json.dumps(data, indent=2) + "\n") if leading_comment else (json.dumps(data, indent=2) + "\n")
+    return new_content, modified
+
+
 def main() -> None:
-    ap = argparse.ArgumentParser(description="Apply Antiquarian Bibliophile Heritage visual refinement to Horizon theme.")
+    ap = argparse.ArgumentParser(description="Apply or rollback Antiquarian Bibliophile Heritage visual refinement.")
     ap.add_argument("--dry-run", action="store_true", help="Inspect and simulate changes without saving.")
+    ap.add_argument("--rollback", action="store_true", help="Revert theme to original clinical white Horizon default.")
     args = ap.parse_args()
 
     print("=== ANTICARIAT ALBERT - STOREFRONT VISUAL REFINEMENT DEPLOYER ===")
@@ -523,35 +654,64 @@ def main() -> None:
 
     files_to_upsert: List[Dict[str, str]] = []
 
-    # 1. config/settings_data.json
-    if "config/settings_data.json" in files_map:
-        new_settings, mod = update_settings_data(files_map["config/settings_data.json"])
-        if mod:
-            print("[MODIFY] config/settings_data.json: Color palette and typography tokens updated.")
-            files_to_upsert.append({"filename": "config/settings_data.json", "content": new_settings})
-        else:
-            print("[SKIP] config/settings_data.json: Already up to date.")
-
-    # 2. assets/base.css
-    if "assets/base.css" in files_map:
-        new_css, mod = update_base_css(files_map["assets/base.css"])
-        if mod:
-            print("[MODIFY] assets/base.css: Appending/updating antiquarian card & button styling block.")
-            files_to_upsert.append({"filename": "assets/base.css", "content": new_css})
-        else:
-            print("[SKIP] assets/base.css: Heritage styling block already present and identical.")
-
-    # 3. Templates and sections
-    for fn in template_files:
-        if fn in ["config/settings_data.json", "assets/base.css"]:
-            continue
-        if fn in files_map and files_map[fn]:
-            new_content, mod = harmonize_template_headings(files_map[fn], fn)
+    if args.rollback:
+        print("\n[ROLLBACK MODE] Preparing to revert theme to clinical white Horizon default...")
+        if "config/settings_data.json" in files_map:
+            new_settings, mod = rollback_settings_data(files_map["config/settings_data.json"])
             if mod:
-                print(f"[MODIFY] {fn}: Headings and titles switched to var(--font-heading--family).")
-                files_to_upsert.append({"filename": fn, "content": new_content})
+                print("[ROLLBACK] config/settings_data.json: Reverting to #ffffff canvas and inter_n7.")
+                files_to_upsert.append({"filename": "config/settings_data.json", "content": new_settings})
             else:
-                print(f"[SKIP] {fn}: Heading fonts already up to date.")
+                print("[SKIP] config/settings_data.json: Already in default state.")
+
+        if "assets/base.css" in files_map:
+            new_css, mod = rollback_base_css(files_map["assets/base.css"])
+            if mod:
+                print("[ROLLBACK] assets/base.css: Removing antiquarian styling block.")
+                files_to_upsert.append({"filename": "assets/base.css", "content": new_css})
+            else:
+                print("[SKIP] assets/base.css: Antiquarian styling block not present.")
+
+        for fn in template_files:
+            if fn in ["config/settings_data.json", "assets/base.css"]:
+                continue
+            if fn in files_map and files_map[fn]:
+                new_content, mod = rollback_template_headings(files_map[fn], fn)
+                if mod:
+                    print(f"[ROLLBACK] {fn}: Reverting titles to var(--font-body--family).")
+                    files_to_upsert.append({"filename": fn, "content": new_content})
+                else:
+                    print(f"[SKIP] {fn}: Already in default state.")
+    else:
+        # 1. config/settings_data.json
+        if "config/settings_data.json" in files_map:
+            new_settings, mod = update_settings_data(files_map["config/settings_data.json"])
+            if mod:
+                print("[MODIFY] config/settings_data.json: Color palette and typography tokens updated.")
+                files_to_upsert.append({"filename": "config/settings_data.json", "content": new_settings})
+            else:
+                print("[SKIP] config/settings_data.json: Already up to date.")
+
+        # 2. assets/base.css
+        if "assets/base.css" in files_map:
+            new_css, mod = update_base_css(files_map["assets/base.css"])
+            if mod:
+                print("[MODIFY] assets/base.css: Appending/updating antiquarian card & button styling block.")
+                files_to_upsert.append({"filename": "assets/base.css", "content": new_css})
+            else:
+                print("[SKIP] assets/base.css: Heritage styling block already present and identical.")
+
+        # 3. Templates and sections
+        for fn in template_files:
+            if fn in ["config/settings_data.json", "assets/base.css"]:
+                continue
+            if fn in files_map and files_map[fn]:
+                new_content, mod = harmonize_template_headings(files_map[fn], fn)
+                if mod:
+                    print(f"[MODIFY] {fn}: Headings and titles switched to var(--font-heading--family).")
+                    files_to_upsert.append({"filename": fn, "content": new_content})
+                else:
+                    print(f"[SKIP] {fn}: Heading fonts already up to date.")
 
     # Dry-run check
     if args.dry_run:
