@@ -11,8 +11,8 @@ This directory manages native visual refinements, CSS enhancements, and theme co
 ## Scripts
 - `apply_visual_refinement.py`: Orchestrates the Antiquarian Bibliophile Heritage visual transition:
   - Updates `config/settings_data.json` color palette tokens and typography settings.
-  - Aligns template JSON files to use `var(--font-heading--family)` for titles.
-  - Idempotently enhances `assets/base.css` with card and button styling.
+  - Aligns template JSON files to use `var(--font-heading--family)` for titles, with centered alignment and 12px inset padding on product cards.
+  - Idempotently enhances `assets/base.css` with card corner clipping (`overflow: hidden`), center alignment, 12px inset padding, and button styling.
   - Performs live HTTPS validation through the password gate.
   - Runs WCAG AAA contrast ratio checks.
 
