@@ -32,6 +32,21 @@ doppler run --project anticariat-bau --config prd -- python3 themes/apply_visual
 doppler run --project anticariat-bau --config prd -- python3 themes/apply_visual_refinement.py
 ```
 
+## Rollback Protocol
+If you wish to revert to the default Horizon 4.2.0 clinical white appearance:
+```bash
+# Preview rollback changes safely
+doppler run --project anticariat-bau --config prd -- python3 themes/apply_visual_refinement.py --dry-run --rollback
+
+# Execute live rollback
+doppler run --project anticariat-bau --config prd -- python3 themes/apply_visual_refinement.py --rollback
+```
+The rollback procedure is 100% deterministic:
+- Restores `config/settings_data.json` to `#ffffff` background, `#000000` text, and `inter_n7` headings.
+- Strips the marked custom CSS block from `assets/base.css`.
+- Reverts template titles in `templates/*.json` to `var(--font-body--family)`.
+- Leaves custom Liquid blocks (`product-author-block.liquid`, `product-specifications-block.liquid`) completely untouched and operational.
+
 ## Affected Theme Assets
 1. `config/settings_data.json`: Centralized color palette, button radiuses, typography bindings.
 2. `assets/base.css`: Appended with marked block `/* anticariat-theme: antiquarian bibliophile heritage styling */`.
